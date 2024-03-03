@@ -4,31 +4,42 @@ class ProductManager {
   constructor() {
     this.products = [];
     this.path = './products.json'; // Ruta del archivo JSON
+    // Verifica si el archivo products.json existe, si no, lo crea e inicializa
+    this.initializeProductsFile();
+  }
+
+  async initializeProductsFile() {
+    try {
+      await fs.access(this.path); // Verifica si el archivo existe
+    } catch (err) {
+      // El archivo no existe, entonces lo crea e inicializa
+      await writeProductsFile(this.path, this.products);
+    }
   }
 
   // Método para agregar un nuevo producto
   async addProduct(product) {
     const { title, description, price, thumbnail, code, stock } = product;
-    // Verifica si todos los campos obligatorios están presentes
     if (!title || !description || !price || !thumbnail || !code || !stock) {
       throw new Error(
         'Recuerda completar los campos, todos los campos son obligatorios para crear un producto nuevo.'
       );
     }
-    // Verifica si el código del producto ya existe
     if (this.products.some((product) => product.code === code)) {
       throw new Error('El código del producto ya existe.');
     }
-    // Agrega el producto a la lista de productos y escribe en el archivo
     this.products.push(product);
     await writeProductsFile(this.path, this.products);
+    console.log('Producto agregado exitosamente.', product);
   }
 
   // Método para obtener todos los productos
   async getProducts() {
-    // Lee los productos del archivo y los muestra en la consola
+    if (!fs.existsSync(this.path)) {
+      return console.log('No se encontró el archivo products.json');
+    }
     const products = await readProductsFile(this.path);
-    console.log(products);
+    console.log('Los productos que se encuentran actualmente son:', products);
     return products;
   }
 
@@ -40,7 +51,7 @@ class ProductManager {
     if (productIndex === -1) {
       throw new Error('Producto no encontrado');
     }
-    console.log(products[productIndex]);
+    console.log('El producto consultado es:', products[productIndex]);
     return products[productIndex];
   }
 
@@ -81,7 +92,9 @@ class ProductManager {
 async function readProductsFile(path) {
   try {
     const jsonData = await fs.promises.readFile(path, 'utf-8');
-    return JSON.parse(jsonData);
+    const products = JSON.parse(jsonData);
+    console.log(products);
+    return products;
   } catch (err) {
     console.error('Error al leer el archivo products.json:', err);
     throw new Error('No se pudo leer el archivo products.json');
@@ -119,26 +132,78 @@ class Product {
 
 // Testeo del código
 (async () => {
-  const productManager = new ProductManager();
-  const product = new Product(
-    'Campera',
-    'Descripcion',
-    2000,
-    '78367834',
-    10,
-    2
+  const productManager = new ProductManager(); // inicializa
+
+  // Test Case 1: Se creará una instancia de la clase "ProductManager"
+  console.log('Test Case 1: Instancia de ProductManager creada');
+
+  // Test Case 2: Se llamará "getProducts" recién creada la instancia, debe devolver un arreglo vacío []
+  const emptyProducts = await productManager.getProducts();
+  if (Array.isArray(emptyProducts) && emptyProducts.length === 0) {
+    console.log('Test Case 2: PASSED');
+  } else {
+    console.log('Test Case 2: FAILED');
+  }
+
+  // Test Case 3: Se llamará al método "addProduct" con los campos especificados
+  const testProduct = new Product(
+    'Producto prueba',
+    'Este es un producto prueba',
+    200,
+    'Sin imagen',
+    'abc123',
+    25
   );
-  const product2 = new Product(
-    'Campera',
-    'Descripcion',
-    2000,
-    '78367834',
-    11,
-    2
+  await productManager.addProduct(testProduct);
+
+  // Test Case 4: Se llamará al método "getProducts" nuevamente, debe aparecer el producto recién agregado
+  const productsAfterAdd = await productManager.getProducts();
+  const addedProductFound = productsAfterAdd.some(
+    (product) => product.id === testProduct.id
   );
-  await productManager.addProduct(product);
-  await productManager.addProduct(product2);
-  await productManager.getProducts();
-  await productManager.getProductById(1);
-  await productManager.deleteProduct(1);
+  if (addedProductFound) {
+    console.log('Test Case 4: PASSED');
+  } else {
+    console.log('Test Case 4: FAILED');
+  }
+
+  // Test Case 5: Se llamará al método "getProductById" y se corroborará que devuelva el producto con el id especificado
+  try {
+    const retrievedProduct = await productManager.getProductById(
+      testProduct.id
+    );
+    if (retrievedProduct.id === testProduct.id) {
+      console.log('Test Case 5: PASSED');
+    } else {
+      console.log('Test Case 5: FAILED');
+    }
+  } catch (error) {
+    console.log('Test Case 5: FAILED - Error:', error.message);
+  }
+
+  // Test Case 6: Se llamará al método "updateProduct" y se intentará cambiar un campo de algún producto
+  const updateData = { description: 'Nueva descripción' };
+  await productManager.updateProduct(testProduct.id, updateData);
+  const updatedProduct = await productManager.getProductById(testProduct.id);
+  if (updatedProduct.description === updateData.description) {
+    console.log('Test Case 6: PASSED');
+  } else {
+    console.log('Test Case 6: FAILED');
+  }
+
+  // Test Case 7: Se llamará al método "deleteProduct", se evaluará que realmente se elimine el producto o que arroje un error en caso de no existir
+  try {
+    await productManager.deleteProduct(testProduct.id);
+    const productsAfterDelete = await productManager.getProducts();
+    const deletedProductFound = productsAfterDelete.some(
+      (product) => product.id === testProduct.id
+    );
+    if (!deletedProductFound) {
+      console.log('Test Case 7: PASSED');
+    } else {
+      console.log('Test Case 7: FAILED');
+    }
+  } catch (error) {
+    console.log('Test Case 7: FAILED - Error:', error.message);
+  }
 })();
