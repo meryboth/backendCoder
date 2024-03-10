@@ -1,0 +1,110 @@
+[
+  {
+    "title": "Zapatillas Nike Air Max 270",
+    "description": "Zapatillas Nike Air Max 270 para correr con amortiguación superior y comodidad duradera.",
+    "price": 150,
+    "thumbnail": "https://example.com/nike_air_max_270.jpg",
+    "code": "nike270",
+    "stock": 50,
+    "id": 1
+  },
+  {
+    "title": "Zapatillas Nike Air Force 1",
+    "description": "Zapatillas clásicas Nike Air Force 1 con estilo icónico y comodidad durante todo el día.",
+    "price": 120,
+    "thumbnail": "https://example.com/nike_air_force_1.jpg",
+    "code": "nikeaf1",
+    "stock": 40,
+    "id": 2
+  },
+  {
+    "title": "Zapatillas Nike React Infinity Run",
+    "description": "Zapatillas Nike React Infinity Run diseñadas para ayudar a reducir las lesiones y mantener la frescura durante el entrenamiento.",
+    "price": 180,
+    "thumbnail": "https://example.com/nike_react_infinity_run.jpg",
+    "code": "nikeinfinity",
+    "stock": 30,
+    "id": 3
+  },
+  {
+    "title": "Zapatillas Nike Zoom Pegasus Turbo 2",
+    "description": "Zapatillas de running Nike Zoom Pegasus Turbo 2 con espuma ZoomX para una mayor capacidad de respuesta y velocidad.",
+    "price": 200,
+    "thumbnail": "https://example.com/nike_pegasus_turbo_2.jpg",
+    "code": "nikepegasus",
+    "stock": 25,
+    "id": 4
+  },
+  {
+    "title": "Zapatillas Nike Air Zoom Structure 22",
+    "description": "Zapatillas Nike Air Zoom Structure 22 diseñadas para proporcionar soporte y estabilidad durante la carrera.",
+    "price": 140,
+    "thumbnail": "https://example.com/nike_air_zoom_structure_22.jpg",
+    "code": "nikezoomstructure",
+    "stock": 35,
+    "id": 5
+  },
+  {
+    "title": "Zapatillas Nike Joyride Run Flyknit",
+    "description": "Zapatillas Nike Joyride Run Flyknit con tecnología de amortiguación Joyride para una experiencia de carrera más suave y receptiva.",
+    "price": 220,
+    "thumbnail": "https://example.com/nike_joyride_run_flyknit.jpg",
+    "code": "nikejoyride",
+    "stock": 20,
+    "id": 6
+  },
+  {
+    "title": "Zapatillas Nike Air Zoom SuperRep",
+    "description": "Zapatillas Nike Air Zoom SuperRep diseñadas para entrenamientos de alta intensidad con amortiguación Zoom Air y estabilidad lateral.",
+    "price": 160,
+    "thumbnail": "https://example.com/nike_air_zoom_superrep.jpg",
+    "code": "nikeairzoomsuperrep",
+    "stock": 30,
+    "id": 7
+  },
+  {
+    "title": "Zapatillas Nike Free RN 5.0",
+    "description": "Zapatillas Nike Free RN 5.0 diseñadas para proporcionar una sensación natural de flexibilidad y ligereza durante la carrera.",
+    "price": 110,
+    "thumbnail": "https://example.com/nike_free_rn_5.jpg",
+    "code": "nikefreern",
+    "stock": 45,
+    "id": 8
+  },
+  {
+    "title": "Zapatillas Nike Air VaporMax 2021 FK",
+    "description": "Zapatillas Nike Air VaporMax 2021 FK con una parte superior Flyknit y amortiguación VaporMax para una comodidad y estilo excepcionales.",
+    "price": 250,
+    "thumbnail": "https://example.com/nike_air_vapormax_2021.jpg",
+    "code": "nikevapormax2021",
+    "stock": 15,
+    "id": 9
+  },
+  {
+    "title": "Zapatillas Nike Renew Run",
+    "description": "Zapatillas Nike Renew Run con amortiguación suave y duradera para una comodidad durante todo el día y carreras de larga distancia.",
+    "price": 130,
+    "thumbnail": "https://example.com/nike_renew_run.jpg",
+    "code": "nikerenewrun",
+    "stock": 40,
+    "id": 10
+  },
+  {
+    "title": "Zapatillas Nike Air Zoom Terra Kiger 7",
+    "description": "Zapatillas Nike Air Zoom Terra Kiger 7 diseñadas para correr en terrenos difíciles con tracción y estabilidad superiores.",
+    "price": 170,
+    "thumbnail": "https://example.com/nike_air_zoom_terra_kiger_7.jpg",
+    "code": "nikezoomkiger",
+    "stock": 30,
+    "id": 11
+  },
+  {
+    "title": "Zapatillas Nike Air Max 2090",
+    "description": "Zapatillas Nike Air Max 2090 inspiradas en el Air Max 90 con una amortiguación Air Max y un estilo moderno.",
+    "price": 190,
+    "thumbnail": "https://example.com/nike_air_max_2090.jpg",
+    "code": "nike2090",
+    "stock": 35,
+    "id": 12
+  }
+]
