@@ -1,0 +1,134 @@
+{
+	"info": {
+		"_postman_id": "9055baec-8322-4a04-8e02-e263a3a68929",
+		"name": "ECommerce",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27906254",
+		"_collection_link": "https://galactic-astronaut-7918.postman.co/workspace/Flock~8053fdc4-3ec6-469a-b4d5-bda07f493698/collection/27906254-9055baec-8322-4a04-8e02-e263a3a68929?action=share&source=collection_link&creator=27906254"
+	},
+	"item": [
+		{
+			"name": "products",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "newProduct",
+			"request": {
+				"method": "POST",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "updateProduct",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"category\": \"Style\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/products/p:b2b1c9ca-f87d-4868-81d5-8f1336bd701c",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"products",
+						"p:b2b1c9ca-f87d-4868-81d5-8f1336bd701c"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deteleProduct",
+			"request": {
+				"method": "DELETE",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "newCart",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"productId\": \"c77c18f6-db52-43d1-b378-faf82c420fb6\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/cart",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"cart"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "cart",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/cart",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"cart"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "newProductInCart",
+			"request": {
+				"method": "POST",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
