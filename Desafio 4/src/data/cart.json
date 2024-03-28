@@ -1,0 +1,19 @@
+[
+  {
+    "id": "beff60e8-d4bf-4a6e-a341-45979cc1f78e",
+    "products": [
+      {
+        "id": "c77c18f6-db52-43d1-b378-faf82c420fb6",
+        "title": "Zapatillas Nike Air Zoom Winflo 8",
+        "description": "Zapatillas Nike Air Zoom Winflo 8 diseñadas para brindar una sensación de velocidad y sujeción durante la carrera.",
+        "code": "nikewinflo8",
+        "price": 150,
+        "status": true,
+        "stock": 25,
+        "category": "Running",
+        "thumbnails": "https://example.com/nike_air_zoom_winflo_8.jpg",
+        "quantity": 2
+      }
+    ]
+  }
+]

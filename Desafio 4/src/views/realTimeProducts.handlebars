@@ -1,0 +1,22 @@
+<section class="w-full h-full flex-col justify-center items-center pt-5">
+    <div class="w-full flex flex-row justify-center items-center p-5">
+        <h2 class="font-bold text-xl">Stock de productos en tiempo real</h2>
+    </div>
+    <div id="product-list" class="w-full flex flex-wrap justify-center items-center">
+        {{#each products}}
+            <div class="card shadow-md rounded-lg max-w-sm mx-3 my-3 p-5 bg-slate-100">
+                <h3 class="text-gray-900 font-bold text-xl tracking-tight">{{this.title}}</h3>
+                <p class="text-gray-500 text-s">{{this.description}}</p>
+                <div class="flex flex-row justify-between items-center mt-5">
+                    <p class="text-gray-900 font-bold text-xl">${{this.price}}</p>
+                    <button class="btn-delete bg-red-500 text-white rounded-lg p-3" data-product-id="{{this.id}}">Eliminar</button>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+</section>
+
+
+<!-- CDN -->
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous"></script>
+<script src="js/main.js"></script>

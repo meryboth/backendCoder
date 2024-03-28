@@ -9,15 +9,43 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('./src/public'));
 
-//routes
+//Rutas
+app.use('/api', productsRouter);
+app.use('/api', cartsRouter);
 app.use('/', viewsRouter);
 
-//Config HandleBars
+//handlebars config
 app.engine('handlebars', exphbs.engine());
 app.set('view engine', 'handlebars');
 app.set('views', './src/views');
 
-/* listen to port */
-app.listen(PORT, () => {
+//listen to port
+const httpServer = app.listen(PORT, () => {
   console.log('Escuchando en el port 8080');
+});
+
+//Importamos el modulo
+import { Server } from 'socket.io';
+//Linkeamos el server con socket. Generamos una instancia del lado del server.
+const io = new Server(httpServer);
+
+//Escuchamos la peticion del cliente desde main.js:
+io.on('connection', async (socket) => {
+  console.log('Un cliente conectado');
+
+  //Enviamos el array de productos al cliente:
+  socket.emit('productos', await productManager.getProducts());
+
+  //Recibimos el evento "eliminarProducto" desde el cliente:
+  socket.on('eliminarProducto', async (id) => {
+    await productManager.deleteProduct(id);
+    //Enviamos el array de productos actualizados:
+    socket.emit('productos', await productManager.getProducts());
+  });
+
+  //Recibimos el evento "agregarProducto" desde el cliente:
+  socket.on('agregarProducto', async (producto) => {
+    await productManager.addProduct(producto);
+    socket.emit('productos', await productManager.getProducts());
+  });
 });

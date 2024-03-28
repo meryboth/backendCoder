@@ -1,0 +1,14 @@
+<section class="w-full h-full flex-col justify-center items-center pt-5">
+    <div class="w-full flex flex-row justify-center items-center p-5">
+        <h2 class="font-bold text-xl">Stock de productos</h2>
+    </div>
+<div class="w-full flex flex-wrap justify-center items-center">
+    {{#each productos}}
+    <div class="card shadow-md rounded-lg max-w-sm mx-3 my-3 p-5 bg-slate-100">
+        <h3 class="text-gray-900 font-bold text-xl tracking-tight">{{this.title}}</h3>
+        <p class="text-gray-500 text-s">{{this.description}}</p>
+        <p class="text-gray-900 font-bold text-xl">${{this.price}}</p>
+    </div>
+    {{/each}}
+</div>
+</section>

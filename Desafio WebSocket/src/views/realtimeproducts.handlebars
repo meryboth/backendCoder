@@ -1,0 +1,70 @@
+<section class="w-full h-full flex-col justify-center items-center pt-5">
+    <div class="w-full flex flex-row justify-center items-center p-5">
+        <h2 class="font-bold text-xl">Stock de productos en tiempo real</h2>
+    </div>
+    <div id="product-list" class="w-full flex flex-wrap justify-center items-center"></div>
+    <div class="flex flex-col justify-center items-center mt-5">
+        <h2 class="font-bold text-xl">Formulario para agregar productos</h2>
+        <form class="flex flex-col justify-center items-center px-5 py-8">
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
+                    Titulo
+                </label>
+                <input class="input-field" type="text" id="title" placeholder="Titulo">
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
+                    Descripcion
+                </label>
+                <input class="input-field" type="text" id="description" placeholder="Descripcion">
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="price">
+                    Precio
+                </label>
+                <input class="input-field" type="number" id="price" placeholder="Precio">
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="img">
+                    Imagen
+                </label>
+                <input class="input-field" type="text" id="img" value="Sin Imagen">
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="code">
+                    Codigo
+                </label>
+                <input class="input-field" type="text" id="code" placeholder="Código">
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="stock">
+                    Stock
+                </label>
+                <input class="input-field" type="number" id="stock" placeholder="Stock">
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="category">
+                    Categoria
+                </label>
+                <input class="input-field" type="text" id="category" placeholder="Categoria">
+            </div>
+          <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="status">
+                    Estado
+                </label>
+                <select class="input-field block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" id="status">
+                    <option value="true"> Activo </option>
+                    <option value="false"> Inactivo </option>
+                </select>
+            </div>
+            <button class="input-field bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" id="btnEnviar">
+                Enviar
+            </button>
+        </form>
+    </div>
+</section>
+
+
+
+<script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+<script src="js/main.js"></script>
