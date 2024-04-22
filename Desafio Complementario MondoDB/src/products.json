@@ -1,0 +1,143 @@
+[
+    {
+      "title": "Zapatillas Nike Air Max",
+      "description": "Zapatillas deportivas para correr con tecnología Air Max para una mayor amortiguación.",
+      "price": 150,
+      "img": "https://example.com/zapatillas-nike-air-max.jpg",
+      "code": "NIKE001",
+      "stock": 100,
+      "category": "Calzado deportivo",
+      "status": true,
+      "thumbnails": [
+        "https://example.com/zapatillas-nike-air-max-thumbnail1.jpg",
+        "https://example.com/zapatillas-nike-air-max-thumbnail2.jpg"
+      ]
+    },
+    {
+      "title": "Zapatillas Nike Air Force 1",
+      "description": "Zapatillas urbanas clásicas con estilo retro.",
+      "price": 120,
+      "img": "https://example.com/zapatillas-nike-air-force-1.jpg",
+      "code": "NIKE002",
+      "stock": 80,
+      "category": "Calzado urbano",
+      "status": true,
+      "thumbnails": [
+        "https://example.com/zapatillas-nike-air-force-1-thumbnail1.jpg",
+        "https://example.com/zapatillas-nike-air-force-1-thumbnail2.jpg"
+      ]
+    },
+    {
+      "title": "Zapatillas Nike React Infinity Run",
+      "description": "Zapatillas de running con tecnología React para mayor comodidad y estabilidad.",
+      "price": 170,
+      "img": "https://example.com/zapatillas-nike-react-infinity-run.jpg",
+      "code": "NIKE003",
+      "stock": 120,
+      "category": "Calzado deportivo",
+      "status": true,
+      "thumbnails": [
+        "https://example.com/zapatillas-nike-react-infinity-run-thumbnail1.jpg",
+        "https://example.com/zapatillas-nike-react-infinity-run-thumbnail2.jpg"
+      ]
+    },
+    {
+      "title": "Zapatillas Adidas Ultraboost",
+      "description": "Zapatillas de running con tecnología Boost para una mayor respuesta y retorno de energía.",
+      "price": 160,
+      "img": "https://example.com/zapatillas-adidas-ultraboost.jpg",
+      "code": "ADIDAS001",
+      "stock": 90,
+      "category": "Calzado deportivo",
+      "status": true,
+      "thumbnails": [
+        "https://example.com/zapatillas-adidas-ultraboost-thumbnail1.jpg",
+        "https://example.com/zapatillas-adidas-ultraboost-thumbnail2.jpg"
+      ]
+    },
+    {
+      "title": "Zapatillas Adidas Stan Smith",
+      "description": "Zapatillas clásicas con diseño minimalista.",
+      "price": 80,
+      "img": "https://example.com/zapatillas-adidas-stan-smith.jpg",
+      "code": "ADIDAS002",
+      "stock": 150,
+      "category": "Calzado urbano",
+      "status": true,
+      "thumbnails": [
+        "https://example.com/zapatillas-adidas-stan-smith-thumbnail1.jpg",
+        "https://example.com/zapatillas-adidas-stan-smith-thumbnail2.jpg"
+      ]
+    },
+    {
+      "title": "Zapatillas Puma RS-X",
+      "description": "Zapatillas inspiradas en el diseño retro de los años 80.",
+      "price": 110,
+      "img": "https://example.com/zapatillas-puma-rs-x.jpg",
+      "code": "PUMA001",
+      "stock": 70,
+      "category": "Calzado deportivo",
+      "status": true,
+      "thumbnails": [
+        "https://example.com/zapatillas-puma-rs-x-thumbnail1.jpg",
+        "https://example.com/zapatillas-puma-rs-x-thumbnail2.jpg"
+      ]
+    },
+    {
+      "title": "Zapatillas New Balance 574",
+      "description": "Zapatillas de estilo retro con un toque moderno.",
+      "price": 100,
+      "img": "https://example.com/zapatillas-new-balance-574.jpg",
+      "code": "NEWBALANCE001",
+      "stock": 120,
+      "category": "Calzado urbano",
+      "status": true,
+      "thumbnails": [
+        "https://example.com/zapatillas-new-balance-574-thumbnail1.jpg",
+        "https://example.com/zapatillas-new-balance-574-thumbnail2.jpg"
+      ]
+    },
+    {
+      "title": "Zapatillas Converse Chuck Taylor All Star",
+      "description": "Zapatillas clásicas y atemporales.",
+      "price": 70,
+      "img": "https://example.com/zapatillas-converse-chuck-taylor.jpg",
+      "code": "CONVERSE001",
+      "stock": 100,
+      "category": "Calzado urbano",
+      "status": true,
+      "thumbnails": [
+        "https://example.com/zapatillas-converse-chuck-taylor-thumbnail1.jpg",
+        "https://example.com/zapatillas-converse-chuck-taylor-thumbnail2.jpg"
+      ]
+    },
+    {
+      "title": "Zapatillas Vans Old Skool",
+      "description": "Zapatillas skate clásicas con el icónico diseño lateral en forma de rayo.",
+      "price": 75,
+      "img": "https://example.com/zapatillas-vans-old-skool.jpg",
+      "code": "VANS001",
+      "stock": 110,
+      "category": "Calzado urbano",
+      "status": true,
+      "thumbnails": [
+        "https://example.com/zapatillas-vans-old-skool-thumbnail1.jpg",
+        "https://example.com/zapatillas-vans-old-skool-thumbnail2.jpg"
+      ]
+    },
+    {
+      "title": "Zapatillas Reebok Classic Leather",
+      "description": "Zapatillas clásicas de cuero para un estilo atemporal.",
+      "price": 90,
+      "img": "https://example.com/zapatillas-reebok-classic-leather.jpg",
+      "code": "REEBOK001",
+      "stock": 85,
+      "category": "Calzado urbano",
+      "status": true,
+      "thumbnails": [
+        "https://example.com/zapatillas-reebok-classic-leather-thumbnail1.jpg",
+        "https://example.com/zapatillas-reebok-classic-leather-thumbnail2.jpg"
+      ]
+    }
+  ]
+  
