@@ -3,10 +3,10 @@ import mongoose from 'mongoose';
 const app = express();
 const port = 8080;
 import exphbs from 'express-handlebars';
-/* import './database.js'; */
-import viewsRouter from './routes/view.routes.js';
-import ProductModel from './models/product.model.js';
-import ProductManager from './controllers/product.manager.js';
+import './database.js';
+import productsRouter from './routes/product.routes.js';
+/* import ProductModel from './models/product.model.js'; */
+/* import ProductManager from './controllers/product.manager.js'; */
 
 /* middlewares */
 app.use(express.urlencoded({ extended: true }));
@@ -22,7 +22,7 @@ app.set('views', './src/views');
 
 /* app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter); */
-app.use('/', viewsRouter);
+app.use('/', productsRouter);
 
 /* listen */
 
