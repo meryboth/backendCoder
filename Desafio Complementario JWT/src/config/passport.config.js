@@ -2,11 +2,13 @@
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as GithubStrategy } from 'passport-github2';
+import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import bcrypt from 'bcrypt';
 import UserModel from '../models/user.model.js';
 import CartManager from '../controllers/cart-manager.js';
 
 const cartManager = new CartManager();
+const JWT_SECRET = 'coderhouse';
 
 const initializePassport = () => {
   passport.use(
@@ -50,7 +52,6 @@ const initializePassport = () => {
             bcrypt.genSaltSync(10)
           );
 
-          // Crear un nuevo carrito
           const newCart = await cartManager.newCart([]);
 
           const newUser = new UserModel({
@@ -59,13 +60,33 @@ const initializePassport = () => {
             email,
             password: hashedPassword,
             age: req.body.age,
-            cart: newCart._id, // Asignar el ID del nuevo carrito al usuario
+            cart: newCart._id,
           });
 
           await newUser.save();
           return done(null, newUser);
         } catch (err) {
           return done(err);
+        }
+      }
+    )
+  );
+
+  passport.use(
+    new JwtStrategy(
+      {
+        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        secretOrKey: JWT_SECRET,
+      },
+      async (jwt_payload, done) => {
+        try {
+          const user = await UserModel.findById(jwt_payload.id);
+          if (user) {
+            return done(null, user);
+          }
+          return done(null, false);
+        } catch (err) {
+          return done(err, false);
         }
       }
     )
@@ -84,7 +105,6 @@ const initializePassport = () => {
             email: profile.emails[0].value,
           });
           if (!user) {
-            // Crear un nuevo carrito para el usuario de GitHub
             const newCart = await cartManager.newCart([]);
 
             const newUser = new UserModel({
@@ -93,7 +113,7 @@ const initializePassport = () => {
               email: profile.emails[0].value,
               password: '',
               age: 0,
-              cart: newCart._id, // Asignar el ID del nuevo carrito al usuario
+              cart: newCart._id,
             });
             user = await newUser.save();
           }

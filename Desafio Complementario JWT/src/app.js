@@ -14,7 +14,6 @@ import initializePassport from './config/passport.config.js';
 
 const app = express();
 const port = 8080;
-const JWT_SECRET = 'coderhouse';
 
 /* middlewares */
 app.use(express.urlencoded({ extended: true }));

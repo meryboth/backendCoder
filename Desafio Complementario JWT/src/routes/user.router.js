@@ -20,7 +20,7 @@ router.post(
     const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
       expiresIn: '1h',
     });
-    res.cookie('jwt', token, { httpOnly: true, secure: false }); // Set secure: true in production with HTTPS
+    res.cookie('jwt', token, { httpOnly: true, secure: false });
     res.redirect('/profile');
   }
 );
