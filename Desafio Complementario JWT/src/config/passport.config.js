@@ -1,4 +1,3 @@
-// config/passport.config.js
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as GithubStrategy } from 'passport-github2';
@@ -11,6 +10,7 @@ const cartManager = new CartManager();
 const JWT_SECRET = 'coderhouse';
 
 const initializePassport = () => {
+  // Estrategia de login local
   passport.use(
     'login',
     new LocalStrategy(
@@ -33,6 +33,7 @@ const initializePassport = () => {
     )
   );
 
+  // Estrategia de registro local
   passport.use(
     'register',
     new LocalStrategy(
@@ -72,6 +73,7 @@ const initializePassport = () => {
     )
   );
 
+  // Estrategia de autenticación JWT
   passport.use(
     new JwtStrategy(
       {
@@ -92,6 +94,7 @@ const initializePassport = () => {
     )
   );
 
+  // Estrategia de autenticación con GitHub
   passport.use(
     new GithubStrategy(
       {
