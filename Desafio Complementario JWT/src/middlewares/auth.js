@@ -22,3 +22,13 @@ export const authenticateJWT = async (req, res, next) => {
     res.status(400).send('Invalid token.');
   }
 };
+
+export const isAdmin = (req, res, next) => {
+  if (req.user && req.user.role === 'admin') {
+    next(); // El usuario es admin, continua con la siguiente función middleware
+  } else {
+    res
+      .status(403)
+      .send('Access denied: Only administrators can access this route.');
+  }
+};

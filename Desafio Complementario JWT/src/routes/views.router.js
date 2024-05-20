@@ -1,10 +1,11 @@
+// views.router.js
+
 import express from 'express';
 const router = express.Router();
 import ProductModel from '../models/product.model.js';
 import CartManager from '../controllers/cart-manager.js';
 const cartManager = new CartManager();
-import paginate from 'mongoose-paginate-v2';
-import { authenticateJWT } from '../middlewares/auth.js';
+import { authenticateJWT, isAdmin } from '../middlewares/auth.js';
 
 router.get('/', async (req, res) => {
   try {
@@ -68,6 +69,11 @@ router.get('/register', (req, res) => {
 
 router.get('/profile', authenticateJWT, (req, res) => {
   res.render('profile', { user: req.user });
+});
+
+// Nueva ruta para la vista de administración
+router.get('/admin', authenticateJWT, isAdmin, (req, res) => {
+  res.render('admin', { user: req.user });
 });
 
 export default router;
