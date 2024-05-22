@@ -1,5 +1,4 @@
-// config/passport.js
-
+// /config/passport.js
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as GithubStrategy } from 'passport-github2';
@@ -7,6 +6,7 @@ import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import bcrypt from 'bcrypt';
 import UserModel from '../models/user.model.js';
 import CartManager from '../controllers/cart-manager.js';
+import config from './config.js';
 
 const cartManager = new CartManager();
 const JWT_SECRET = 'coderhouse';
@@ -100,9 +100,9 @@ const initializePassport = () => {
   passport.use(
     new GithubStrategy(
       {
-        clientID: 'Iv23limCsei8SwDYQzSy',
-        clientSecret: '05381d6be05817fb9e14b07994bd5ca500f9338c',
-        callbackURL: 'http://localhost:8080/api/sessions/githubcallback',
+        clientID: config.githubClientID,
+        clientSecret: config.githubClientSecret,
+        callbackURL: config.githubCallbackURL,
       },
       async (accessToken, refreshToken, profile, done) => {
         try {

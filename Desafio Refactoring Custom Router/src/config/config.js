@@ -9,8 +9,11 @@ dotenv.config({
 });
 
 const configObject = {
-  puerto: process.env.PUERTO,
+  port: process.env.PORT,
   mongo_url: process.env.MONGO_URL,
+  githubClientID: process.env.GITHUB_CLIENT_ID,
+  githubClientSecret: process.env.GITHUB_CLIENT_SECRET,
+  githubCallbackURL: process.env.GITHUB_CALLBACK_URL,
 };
 
 export default configObject;

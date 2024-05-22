@@ -1,6 +1,6 @@
 // /routers/user.router.js
 import CustomRouter from './router.js';
-import passport from 'passport';
+import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { authenticateJWT } from '../middlewares/auth.js';
 import UserModel from '../models/user.model.js';
@@ -10,25 +10,33 @@ const JWT_SECRET = 'coderhouse';
 
 class UserRouter extends CustomRouter {
   init() {
-    this.post(
-      '/register',
-      validateUserRegistration,
-      passport.authenticate('register', { session: false }),
-      this.registerUser
-    );
-    this.get('/profile', authenticateJWT, this.getProfile);
-  }
+    this.post('/register', validateUserRegistration, async (req, res) => {
+      const { name, email, password } = req.body;
 
-  async registerUser(req, res) {
-    if (!req.user) {
-      return res.sendUserError('Registration failed');
-    }
-    const user = req.user;
-    const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
-      expiresIn: '1h',
+      try {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = new UserModel({
+          name,
+          email,
+          password: hashedPassword,
+        });
+        await newUser.save();
+        const token = jwt.sign(
+          { id: newUser._id, email: newUser.email },
+          JWT_SECRET,
+          { expiresIn: '1h' }
+        );
+        res.cookie('jwt', token, { httpOnly: true, secure: false });
+        res.status(201).json({ redirectUrl: '/profile' });
+      } catch (error) {
+        console.error('Error registering user:', error);
+        res
+          .status(500)
+          .render('register', { errors: [{ msg: 'Internal server error' }] });
+      }
     });
-    res.cookie('jwt', token, { httpOnly: true, secure: false });
-    res.redirect('/profile');
+
+    this.get('/profile', authenticateJWT, this.getProfile);
   }
 
   async getProfile(req, res) {

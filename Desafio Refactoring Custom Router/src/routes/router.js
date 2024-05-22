@@ -48,11 +48,7 @@ class CustomRouter {
       try {
         await callback(req, res, next);
       } catch (error) {
-        if (error.isClientError) {
-          res.sendUserError(error.message);
-        } else {
-          res.sendServerError(error.message);
-        }
+        res.status(500).send(error);
       }
     });
   }

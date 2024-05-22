@@ -15,7 +15,6 @@ import notFoundHandler from './middlewares/notfoundHandler.js';
 import config from './config/config.js';
 
 const app = express();
-const port = 8080;
 
 /* middlewares */
 app.use(express.urlencoded({ extended: true }));
@@ -46,7 +45,7 @@ app.use('/api/sessions', sessionRouter);
 app.use('*', notFoundHandler);
 
 /* listen */
-const PORT = config.puerto;
+const PORT = config.port;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
