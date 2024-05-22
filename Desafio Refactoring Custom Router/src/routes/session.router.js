@@ -2,6 +2,7 @@
 import CustomRouter from './router.js';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
+import { validateUserLogin } from '../middlewares/validators.js';
 
 const JWT_SECRET = 'coderhouse';
 
@@ -9,6 +10,7 @@ class SessionRouter extends CustomRouter {
   init() {
     this.post(
       '/login',
+      validateUserLogin,
       passport.authenticate('login', { session: false }),
       this.loginUser
     );
