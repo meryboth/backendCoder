@@ -11,6 +11,8 @@ import sessionRouter from './routes/session.router.js';
 import userRouter from './routes/user.router.js';
 import passport from 'passport';
 import initializePassport from './config/passport.config.js';
+import notFoundHandler from './middlewares/notfoundHandler.js';
+import config from './config/config.js';
 
 const app = express();
 const port = 8080;
@@ -41,8 +43,10 @@ app.use('/api/products', productsRouter);
 app.use('/api/carts', cartRouter);
 app.use('/api/users', userRouter);
 app.use('/api/sessions', sessionRouter);
+app.use('*', notFoundHandler);
 
 /* listen */
-const httpServer = app.listen(port, () => {
-  console.log(`Escuchando en el puerto: http://localhost:${port}`);
+const PORT = config.puerto;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
