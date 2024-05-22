@@ -1,17 +1,33 @@
-import express from 'express';
+// /routers/session.router.js
+import CustomRouter from './router.js';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
 
-const router = express.Router();
 const JWT_SECRET = 'coderhouse';
 
-// Ruta de login de usuario
-router.post(
-  '/login',
-  passport.authenticate('login', { session: false }),
-  async (req, res) => {
+class SessionRouter extends CustomRouter {
+  init() {
+    this.post(
+      '/login',
+      passport.authenticate('login', { session: false }),
+      this.loginUser
+    );
+    this.get('/logout', this.logoutUser);
+    this.get(
+      '/github',
+      passport.authenticate('github', { scope: ['user:email'] }),
+      this.githubAuth
+    );
+    this.get(
+      '/githubcallback',
+      passport.authenticate('github', { failureRedirect: '/login' }),
+      this.githubCallback
+    );
+  }
+
+  async loginUser(req, res) {
     if (!req.user) {
-      return res.status(400).send('Login failed');
+      return res.sendUserError('Login failed');
     }
     const user = req.user;
     const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
@@ -20,26 +36,15 @@ router.post(
     res.cookie('jwt', token, { httpOnly: true, secure: false });
     res.redirect('/profile');
   }
-);
 
-// Ruta de logout de usuario
-router.get('/logout', (req, res) => {
-  res.clearCookie('jwt');
-  res.redirect('/login');
-});
+  logoutUser(req, res) {
+    res.clearCookie('jwt');
+    res.redirect('/login');
+  }
 
-// Ruta para autenticarse con Github
-router.get(
-  '/github',
-  passport.authenticate('github', { scope: ['user:email'] }),
-  async (req, res) => {}
-);
+  githubAuth(req, res) {}
 
-// Callback de autenticación de Github
-router.get(
-  '/githubcallback',
-  passport.authenticate('github', { failureRedirect: '/login' }),
-  async (req, res) => {
+  async githubCallback(req, res) {
     const user = req.user;
     const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
       expiresIn: '1h',
@@ -47,6 +52,6 @@ router.get(
     res.cookie('jwt', token, { httpOnly: true, secure: false });
     res.redirect('/profile');
   }
-);
+}
 
-export default router;
+export default new SessionRouter().getRouter();

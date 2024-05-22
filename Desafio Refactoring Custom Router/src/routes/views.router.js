@@ -1,79 +1,84 @@
-// views.router.js
-
-import express from 'express';
-const router = express.Router();
+// /routers/views.router.js
+import CustomRouter from './router.js';
 import ProductModel from '../models/product.model.js';
 import CartManager from '../controllers/cart-manager.js';
-const cartManager = new CartManager();
 import { authenticateJWT, isAdmin } from '../middlewares/auth.js';
 
-router.get('/', async (req, res) => {
-  try {
-    let page = req.query.page || 1;
-    let limit = parseInt(req.query.limit) || 10;
-    const productos = await ProductModel.paginate({}, { limit, page });
-    const productosMap = productos.docs.map((producto) => {
-      const { _id, ...rest } = producto.toObject();
-      return rest;
-    });
+const cartManager = new CartManager();
 
-    res.render('products', {
-      productos: productosMap.slice(0, limit),
-      hasPrevPage: productos.hasPrevPage,
-      hasNextPage: productos.hasNextPage,
-      currentPage: productos.page,
-      prevPage: productos.prevPage,
-      nextPage: productos.nextPage,
-      totalPage: productos.totalPages,
-    });
-  } catch (error) {
-    console.error('Failed to fetch products', error);
-    res.status(500).json({
-      error: 'Internal Server Error. Failed to fetch products.',
-    });
+class ViewsRouter extends CustomRouter {
+  init() {
+    this.get('/', this.getProducts);
+    this.get('/carts/:cid', this.getCart);
+    this.get('/login', this.renderLogin);
+    this.get('/register', this.renderRegister);
+    this.get('/profile', authenticateJWT, this.renderProfile);
+    this.get('/admin', authenticateJWT, isAdmin, this.renderAdmin);
   }
-});
 
-router.get('/carts/:cid', async (req, res) => {
-  const cartId = req.params.cid;
+  async getProducts(req, res) {
+    try {
+      let page = req.query.page || 1;
+      let limit = parseInt(req.query.limit) || 10;
+      const productos = await ProductModel.paginate({}, { limit, page });
+      const productosMap = productos.docs.map((producto) => {
+        const { _id, ...rest } = producto.toObject();
+        return rest;
+      });
 
-  try {
-    const carrito = await cartManager.getCartById(cartId);
-
-    if (!carrito) {
-      console.log('No cart found with the provided ID.');
-      return res.status(404).json({ error: 'Cart not found.' });
+      res.render('products', {
+        productos: productosMap.slice(0, limit),
+        hasPrevPage: productos.hasPrevPage,
+        hasNextPage: productos.hasNextPage,
+        currentPage: productos.page,
+        prevPage: productos.prevPage,
+        nextPage: productos.nextPage,
+        totalPage: productos.totalPages,
+      });
+    } catch (error) {
+      console.error('Failed to fetch products', error);
+      res.sendServerError('Internal Server Error. Failed to fetch products.');
     }
-
-    const productosEnCarrito = carrito.products.map((item) => ({
-      product: item.product.toObject(),
-      quantity: item.quantity,
-    }));
-
-    res.render('carts', { productos: productosEnCarrito });
-  } catch (error) {
-    console.error('Error fetching products', error);
-    res
-      .status(500)
-      .json({ error: 'Internal Server Error. Failed to fetch cart.' });
   }
-});
 
-router.get('/login', (req, res) => {
-  res.render('login');
-});
+  async getCart(req, res) {
+    const cartId = req.params.cid;
 
-router.get('/register', (req, res) => {
-  res.render('register');
-});
+    try {
+      const carrito = await cartManager.getCartById(cartId);
 
-router.get('/profile', authenticateJWT, (req, res) => {
-  res.render('profile', { user: req.user });
-});
+      if (!carrito) {
+        console.log('No cart found with the provided ID.');
+        return res.sendUserError('Cart not found.');
+      }
 
-// Nueva ruta para la vista de administración
-router.get('/admin', authenticateJWT, isAdmin, (req, res) => {
-  res.render('admin', { user: req.user });
-});
+      const productosEnCarrito = carrito.products.map((item) => ({
+        product: item.product.toObject(),
+        quantity: item.quantity,
+      }));
 
-export default router;
+      res.render('carts', { productos: productosEnCarrito });
+    } catch (error) {
+      console.error('Error fetching cart', error);
+      res.sendServerError('Internal Server Error. Failed to fetch cart.');
+    }
+  }
+
+  renderLogin(req, res) {
+    res.render('login');
+  }
+
+  renderRegister(req, res) {
+    res.render('register');
+  }
+
+  renderProfile(req, res) {
+    res.render('profile', { user: req.user });
+  }
+
+  renderAdmin(req, res) {
+    res.render('admin', { user: req.user });
+  }
+}
+
+export default new ViewsRouter().getRouter();
