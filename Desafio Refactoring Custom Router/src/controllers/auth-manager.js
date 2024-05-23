@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
+import configObject from '../config/config';
 
-const JWT_SECRET = 'coderhouse';
+const JWT_SECRET = configObject.jwt_secret;
 
 export const generateToken = (user) => {
   const payload = {

@@ -2,11 +2,12 @@
 import CustomRouter from './router.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import configObject from '../config/config.js';
 import { authenticateJWT } from '../middlewares/auth.js';
 import UserModel from '../models/user.model.js';
 import { validateUserRegistration } from '../middlewares/validators.js';
 
-const JWT_SECRET = 'coderhouse';
+const JWT_SECRET = configObject.jwt_secret;
 
 class UserRouter extends CustomRouter {
   init() {

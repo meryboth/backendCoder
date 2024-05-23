@@ -1,10 +1,11 @@
 // /routers/session.router.js
 import CustomRouter from './router.js';
 import passport from 'passport';
+import configObject from '../config/config.js';
 import jwt from 'jsonwebtoken';
 import { validateUserLogin } from '../middlewares/validators.js';
 
-const JWT_SECRET = 'coderhouse';
+const JWT_SECRET = configObject.jwt_secret;
 
 class SessionRouter extends CustomRouter {
   init() {
