@@ -1,9 +1,8 @@
 // middlewares/auth.js
 import jwt from 'jsonwebtoken';
 import UserModel from '../models/user.model.js';
-import configObject from '../config/config.js';
 
-const JWT_SECRET = configObject.jwt_secret;
+const JWT_SECRET = 'coderhouse';
 
 export const authenticateJWT = async (req, res, next) => {
   const token = req.cookies.jwt;

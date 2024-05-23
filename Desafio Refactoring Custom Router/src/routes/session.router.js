@@ -1,36 +1,17 @@
-// /routers/session.router.js
-import CustomRouter from './router.js';
+import express from 'express';
 import passport from 'passport';
-import configObject from '../config/config.js';
 import jwt from 'jsonwebtoken';
-import { validateUserLogin } from '../middlewares/validators.js';
 
-const JWT_SECRET = configObject.jwt_secret;
+const router = express.Router();
+const JWT_SECRET = 'coderhouse';
 
-class SessionRouter extends CustomRouter {
-  init() {
-    this.post(
-      '/login',
-      validateUserLogin,
-      passport.authenticate('login', { session: false }),
-      this.loginUser
-    );
-    this.get('/logout', this.logoutUser);
-    this.get(
-      '/github',
-      passport.authenticate('github', { scope: ['user:email'] }),
-      this.githubAuth
-    );
-    this.get(
-      '/githubcallback',
-      passport.authenticate('github', { failureRedirect: '/login' }),
-      this.githubCallback
-    );
-  }
-
-  async loginUser(req, res) {
+// Ruta de login de usuario
+router.post(
+  '/login',
+  passport.authenticate('login', { session: false }),
+  async (req, res) => {
     if (!req.user) {
-      return res.sendUserError('Login failed');
+      return res.status(400).send('Login failed');
     }
     const user = req.user;
     const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
@@ -39,15 +20,26 @@ class SessionRouter extends CustomRouter {
     res.cookie('jwt', token, { httpOnly: true, secure: false });
     res.redirect('/profile');
   }
+);
 
-  logoutUser(req, res) {
-    res.clearCookie('jwt');
-    res.redirect('/login');
-  }
+// Ruta de logout de usuario
+router.get('/logout', (req, res) => {
+  res.clearCookie('jwt');
+  res.redirect('/login');
+});
 
-  githubAuth(req, res) {}
+// Ruta para autenticarse con Github
+router.get(
+  '/github',
+  passport.authenticate('github', { scope: ['user:email'] }),
+  async (req, res) => {}
+);
 
-  async githubCallback(req, res) {
+// Callback de autenticación de Github
+router.get(
+  '/githubcallback',
+  passport.authenticate('github', { failureRedirect: '/login' }),
+  async (req, res) => {
     const user = req.user;
     const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
       expiresIn: '1h',
@@ -55,6 +47,6 @@ class SessionRouter extends CustomRouter {
     res.cookie('jwt', token, { httpOnly: true, secure: false });
     res.redirect('/profile');
   }
-}
+);
 
-export default new SessionRouter().getRouter();
+export default router;
