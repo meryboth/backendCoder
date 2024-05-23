@@ -14,6 +14,7 @@ const configObject = {
   githubClientID: process.env.GITHUB_CLIENT_ID,
   githubClientSecret: process.env.GITHUB_CLIENT_SECRET,
   githubCallbackURL: process.env.GITHUB_CALLBACK_URL,
+  jwt_secret: process.env.JWT_SECRET,
 };
 
 export default configObject;
