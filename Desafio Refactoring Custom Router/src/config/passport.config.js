@@ -7,9 +7,10 @@ import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import bcrypt from 'bcrypt';
 import UserModel from '../models/user.model.js';
 import CartManager from '../controllers/cart-manager.js';
+import configObject from '../config/config.js';
 
 const cartManager = new CartManager();
-const JWT_SECRET = 'coderhouse';
+const JWT_SECRET = configObject.jwt_secret;
 
 const initializePassport = () => {
   // Estrategia de login local
@@ -100,9 +101,9 @@ const initializePassport = () => {
   passport.use(
     new GithubStrategy(
       {
-        clientID: 'Iv23limCsei8SwDYQzSy',
-        clientSecret: '05381d6be05817fb9e14b07994bd5ca500f9338c',
-        callbackURL: 'http://localhost:8080/api/sessions/githubcallback',
+        clientID: configObject.githubClientID,
+        clientSecret: configObject.githubClientSecret,
+        callbackURL: configObject.githubCallbackURL,
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
