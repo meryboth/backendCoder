@@ -1,6 +1,6 @@
 // services/user.service.js
 import UserModel from '../models/user.model.js';
-import { generateToken } from '../auth/auth.manager.js';
+import { generateToken } from '../controllers/auth-manager.js';
 
 export const registerUser = async (userData) => {
   const user = new UserModel(userData);

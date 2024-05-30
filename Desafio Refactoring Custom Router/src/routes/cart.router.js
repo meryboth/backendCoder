@@ -1,6 +1,6 @@
 // routes/cart.router.js
 import CustomRouter from './router.js';
-import CartService from '../services/cart.service.js';
+import CartService from '../services/cart.services.js';
 
 class CartRouter extends CustomRouter {
   init() {

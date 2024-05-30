@@ -1,6 +1,6 @@
 // routes/product.router.js
 import CustomRouter from './router.js';
-import ProductService from '../services/product.service.js';
+import ProductService from '../services/products.services.js';
 
 class ProductRouter extends CustomRouter {
   init() {
