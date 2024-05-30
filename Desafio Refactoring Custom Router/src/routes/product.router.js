@@ -1,8 +1,6 @@
-// /routers/product.router.js
+// routes/product.router.js
 import CustomRouter from './router.js';
-import ProductManager from '../controllers/product-manager.js';
-
-const productManager = new ProductManager();
+import ProductService from '../services/products.services.js';
 
 class ProductRouter extends CustomRouter {
   init() {
@@ -16,7 +14,7 @@ class ProductRouter extends CustomRouter {
   async getAllProducts(req, res) {
     try {
       const { limit = 10, page = 1, sort, query } = req.query;
-      const productos = await productManager.getProducts({
+      const productos = await ProductService.getProducts({
         limit: parseInt(limit),
         page: parseInt(page),
         sort,
@@ -56,7 +54,7 @@ class ProductRouter extends CustomRouter {
     const id = req.params.pid;
 
     try {
-      const producto = await productManager.getProductById(id);
+      const producto = await ProductService.getProductById(id);
       if (!producto) {
         return res.sendUserError(
           'The product with the requested ID was not found.'
@@ -74,7 +72,7 @@ class ProductRouter extends CustomRouter {
     const nuevoProducto = req.body;
 
     try {
-      await productManager.addProduct(nuevoProducto);
+      await ProductService.addProduct(nuevoProducto);
       res.status(201).json({
         message: 'The entered product was successfully added!',
       });
@@ -89,7 +87,7 @@ class ProductRouter extends CustomRouter {
     const productoActualizado = req.body;
 
     try {
-      await productManager.updateProduct(id, productoActualizado);
+      await ProductService.updateProduct(id, productoActualizado);
       res.json({
         message: 'The product was successfully edited!',
       });
@@ -103,7 +101,7 @@ class ProductRouter extends CustomRouter {
     const id = req.params.pid;
 
     try {
-      await productManager.deleteProduct(id);
+      await ProductService.deleteProduct(id);
       res.json({
         message: 'Product successfully deleted.',
       });
