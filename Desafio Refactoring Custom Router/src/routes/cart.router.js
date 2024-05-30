@@ -1,9 +1,6 @@
-// /routers/cart.router.js
+// routes/cart.router.js
 import CustomRouter from './router.js';
-import CartManager from '../controllers/cart-manager.js';
-import CartModel from '../models/cart.model.js';
-
-const cartManager = new CartManager();
+import CartService from '../services/cart.service.js';
 
 class CartRouter extends CustomRouter {
   init() {
@@ -19,7 +16,7 @@ class CartRouter extends CustomRouter {
   async createCart(req, res) {
     try {
       const products = req.body.products;
-      const nuevoCarrito = await cartManager.newCart(products);
+      const nuevoCarrito = await CartService.createCart(products);
       res.json(nuevoCarrito);
     } catch (error) {
       console.error('Error al crear un nuevo carrito', error);
@@ -31,13 +28,7 @@ class CartRouter extends CustomRouter {
     const cartId = req.params.cid;
 
     try {
-      const carrito = await CartModel.findById(cartId);
-
-      if (!carrito) {
-        console.log('No existe ese carrito con el id');
-        return res.sendUserError('Carrito no encontrado');
-      }
-
+      const carrito = await CartService.getCart(cartId);
       return res.json(carrito.products);
     } catch (error) {
       console.error('Error al obtener el carrito', error);
@@ -51,7 +42,7 @@ class CartRouter extends CustomRouter {
     const quantity = req.body.quantity || 1;
 
     try {
-      const actualizarCarrito = await cartManager.addProductToCart(
+      const actualizarCarrito = await CartService.addProductToCart(
         cartId,
         productId,
         quantity
@@ -68,7 +59,7 @@ class CartRouter extends CustomRouter {
       const cartId = req.params.cid;
       const productId = req.params.pid;
 
-      const updatedCart = await cartManager.deleteProductFromCart(
+      const updatedCart = await CartService.deleteProductFromCart(
         cartId,
         productId
       );
@@ -89,7 +80,7 @@ class CartRouter extends CustomRouter {
     const updatedProducts = req.body;
 
     try {
-      const updatedCart = await cartManager.updateCart(cartId, updatedProducts);
+      const updatedCart = await CartService.updateCart(cartId, updatedProducts);
       res.json(updatedCart);
     } catch (error) {
       console.error('Error al actualizar el carrito', error);
@@ -103,7 +94,7 @@ class CartRouter extends CustomRouter {
       const productId = req.params.pid;
       const newQuantity = req.body.quantity;
 
-      const updatedCart = await cartManager.updateQuantity(
+      const updatedCart = await CartService.updateProductQuantity(
         cartId,
         productId,
         newQuantity
@@ -127,7 +118,7 @@ class CartRouter extends CustomRouter {
     try {
       const cartId = req.params.cid;
 
-      const updatedCart = await cartManager.emptyCart(cartId);
+      const updatedCart = await CartService.emptyCart(cartId);
 
       res.json({
         status: 'success',

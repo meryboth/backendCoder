@@ -1,32 +1,40 @@
+// routes/session.router.js
 import express from 'express';
 import passport from 'passport';
-import jwt from 'jsonwebtoken';
-import configObject from '../config/config.js';
+import {
+  loginUser,
+  logoutUser,
+  githubLogin,
+} from '../services/session.service.js';
 
 const router = express.Router();
-const JWT_SECRET = configObject.jwt_secret;
 
 // Ruta de login de usuario
 router.post(
   '/login',
   passport.authenticate('login', { session: false }),
   async (req, res) => {
-    if (!req.user) {
-      return res.status(400).send('Login failed');
+    try {
+      if (!req.user) {
+        return res.status(400).send('Login failed');
+      }
+      const token = loginUser(req.user);
+      res.cookie('jwt', token, { httpOnly: true, secure: false });
+      res.redirect('/profile');
+    } catch (error) {
+      res.status(500).send(error.message);
     }
-    const user = req.user;
-    const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
-      expiresIn: '1h',
-    });
-    res.cookie('jwt', token, { httpOnly: true, secure: false });
-    res.redirect('/profile');
   }
 );
 
 // Ruta de logout de usuario
 router.get('/logout', (req, res) => {
-  res.clearCookie('jwt');
-  res.redirect('/login');
+  try {
+    logoutUser(res);
+    res.redirect('/login');
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 });
 
 // Ruta para autenticarse con Github
@@ -41,12 +49,13 @@ router.get(
   '/githubcallback',
   passport.authenticate('github', { failureRedirect: '/login' }),
   async (req, res) => {
-    const user = req.user;
-    const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
-      expiresIn: '1h',
-    });
-    res.cookie('jwt', token, { httpOnly: true, secure: false });
-    res.redirect('/profile');
+    try {
+      const token = githubLogin(req.user);
+      res.cookie('jwt', token, { httpOnly: true, secure: false });
+      res.redirect('/profile');
+    } catch (error) {
+      res.status(500).send(error.message);
+    }
   }
 );
 
