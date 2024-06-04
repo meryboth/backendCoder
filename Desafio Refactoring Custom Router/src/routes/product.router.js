@@ -21,7 +21,9 @@ class ProductRouter extends CustomRouter {
         query,
       });
 
-      const paginationInfo = {
+      res.json({
+        status: 'success',
+        payload: productos.docs,
         totalPages: productos.totalPages,
         prevPage: productos.prevPage,
         nextPage: productos.nextPage,
@@ -34,12 +36,6 @@ class ProductRouter extends CustomRouter {
         nextLink: productos.hasNextPage
           ? `/api/products?limit=${limit}&page=${productos.nextPage}&sort=${sort}&query=${query}`
           : null,
-      };
-
-      res.json({
-        status: 'success',
-        payload: productos.docs,
-        ...paginationInfo,
       });
     } catch (error) {
       console.error(
