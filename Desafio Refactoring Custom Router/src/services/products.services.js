@@ -1,15 +1,20 @@
-// services/product.service.js
 import ProductModel from '../models/product.model.js';
 
 class ProductService {
-  async getProducts({ limit, page, sort, query }) {
+  async getProducts({ limit = 10, page = 1, sort, query }) {
+    const queryOptions = query
+      ? { name: { $regex: query, $options: 'i' } }
+      : {};
+    const sortOptions = sort ? { [sort]: 1 } : {};
+
     const options = {
-      limit,
       page,
-      sort: sort ? { [sort]: 1 } : {},
-      query: query ? { name: { $regex: query, $options: 'i' } } : {},
+      limit,
+      sort: sortOptions,
+      lean: true, // Para obtener objetos JavaScript planos en lugar de documentos Mongoose
     };
-    return await ProductModel.paginate(options);
+
+    return await ProductModel.paginate(queryOptions, options);
   }
 
   async getProductById(id) {
