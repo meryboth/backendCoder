@@ -1,6 +1,6 @@
 import mongoManager from '../managers/mongoManager.js';
 import FileSystemManager from '../managers/fileSystemManager.js';
-import { productSchema } from '../../models/product.model.js'; // Asegúrate de que es el esquema y no el modelo
+import { productSchema } from '../../models/product.model.js';
 import { v4 as uuidv4 } from 'uuid';
 
 class ProductDAO {
