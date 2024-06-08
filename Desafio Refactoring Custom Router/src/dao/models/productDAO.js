@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 class ProductDAO {
   constructor(dataSource) {
     if (dataSource === 'mongo') {
-      this.model = mongoManager.connection.model('Product', productSchema);
+      this.model = mongoManager.connection.model('products', productSchema);
     } else if (dataSource === 'fileSystem') {
       this.fileSystem = FileSystemManager;
       this.filePath = 'products.json';

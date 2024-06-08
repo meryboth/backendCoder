@@ -2,7 +2,7 @@ import DAOFactory from '../dao/daoFactory.js';
 import config from '../config/config.js';
 
 const dataSource = config.data_source || 'mongo'; // Utiliza mongo por defecto
-const productDAO = DAOFactory.getDAO('product', dataSource);
+const productDAO = DAOFactory.getDAO('products', dataSource);
 
 class ProductService {
   async getProducts({ limit = 10, page = 1, sort, query }) {

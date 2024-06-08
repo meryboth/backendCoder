@@ -6,10 +6,10 @@ import { Strategy as GithubStrategy } from 'passport-github2';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import bcrypt from 'bcrypt';
 import UserModel from '../models/user.model.js';
-import CartManager from '../controllers/cart-manager.js';
+import CartService from '../services/cart.services.js';
 import configObject from '../config/config.js';
 
-const cartManager = new CartManager();
+const cartManager = new CartService();
 const JWT_SECRET = configObject.jwt_secret;
 
 const initializePassport = () => {
