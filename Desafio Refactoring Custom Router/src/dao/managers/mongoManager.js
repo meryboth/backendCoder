@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import config from '../../../config/config.js';
+import config from '../../config/config.js';
 
 class MongoManager {
   constructor() {
@@ -25,4 +25,5 @@ class MongoManager {
   }
 }
 
-export default MongoManager;
+const mongoManagerInstance = new MongoManager();
+export default mongoManagerInstance;

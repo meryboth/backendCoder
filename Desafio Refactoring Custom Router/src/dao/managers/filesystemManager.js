@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import config from '../../../config/config.js';
+import config from '../../config/config.js';
 
 class FileSystemManager {
   constructor(basePath) {
@@ -42,5 +42,4 @@ class FileSystemManager {
   }
 }
 
-const path = config.filesystem_path;
-export default new FileSystemManager(path);
+export default new FileSystemManager(config.filesystem_path);

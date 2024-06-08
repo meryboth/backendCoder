@@ -5,11 +5,11 @@ import CartDAO from './models/cartDAO.js';
 class DAOFactory {
   static getDAO(entity, dataSource = 'mongo') {
     switch (entity) {
-      case 'user':
+      case 'users':
         return new UserDAO(dataSource);
-      case 'product':
+      case 'products':
         return new ProductDAO(dataSource);
-      case 'cart':
+      case 'carts':
         return new CartDAO(dataSource);
       default:
         throw new Error('Unknown entity type');

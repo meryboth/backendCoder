@@ -1,13 +1,12 @@
 import MongoManager from '../managers/mongoManager.js';
 import FileSystemManager from '../managers/fileSystemManager.js';
-import UserSchema from '../schemas/userSchema.js';
-import { UserModel as UserSchema } from '../../models/user.model.js';
+import UserModel from '../../models/user.model.js';
 import { v4 as uuidv4 } from 'uuid';
 
 class UserDAO {
   constructor(dataSource) {
     if (dataSource === 'mongo') {
-      this.model = MongoManager.connection.model('User', UserSchema);
+      this.model = MongoManager.connection.model('User', UserModel);
     } else if (dataSource === 'fileSystem') {
       this.fileSystem = FileSystemManager;
       this.filePath = 'users.json';
