@@ -9,7 +9,7 @@ import UserModel from '../models/user.model.js';
 import CartService from '../services/cart.services.js';
 import configObject from '../config/config.js';
 
-const cartManager = new CartService();
+const cartManager = CartService;
 const JWT_SECRET = configObject.jwt_secret;
 
 const initializePassport = () => {

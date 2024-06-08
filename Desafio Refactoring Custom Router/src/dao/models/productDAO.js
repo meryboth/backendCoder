@@ -1,12 +1,12 @@
 import mongoManager from '../managers/mongoManager.js';
 import FileSystemManager from '../managers/fileSystemManager.js';
-import { productSchema } from '../../models/product.model.js';
+import productSchema from '../../models/product.model.js'; // Importar el esquema
 import { v4 as uuidv4 } from 'uuid';
 
 class ProductDAO {
   constructor(dataSource) {
     if (dataSource === 'mongo') {
-      this.model = mongoManager.connection.model('products', productSchema);
+      this.model = mongoManager.connection.model('products', productSchema); // Usar el esquema
     } else if (dataSource === 'fileSystem') {
       this.fileSystem = FileSystemManager;
       this.filePath = 'products.json';

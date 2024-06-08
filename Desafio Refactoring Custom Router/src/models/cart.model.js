@@ -16,7 +16,14 @@ const cartSchema = new mongoose.Schema({
   ],
 });
 
+// Popula automáticamente los productos cuando se busca un carrito
 cartSchema.pre('findOne', function (next) {
+  this.populate('products.product', '_id title price');
+  next();
+});
+
+// Popula automáticamente los productos cuando se encuentra un documento único
+cartSchema.pre('findById', function (next) {
   this.populate('products.product', '_id title price');
   next();
 });
