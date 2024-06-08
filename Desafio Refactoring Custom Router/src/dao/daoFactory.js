@@ -1,6 +1,6 @@
 import UserDAO from './models/userDAO.js';
 import ProductDAO from './models/productDAO.js';
-// Importar otros DAOs según sea necesario
+import CartDAO from './models/cartDAO.js';
 
 class DAOFactory {
   static getDAO(entity, dataSource = 'mongo') {
@@ -9,7 +9,8 @@ class DAOFactory {
         return new UserDAO(dataSource);
       case 'product':
         return new ProductDAO(dataSource);
-      // Añadir casos para otros DAOs aquí...
+      case 'cart':
+        return new CartDAO(dataSource);
       default:
         throw new Error('Unknown entity type');
     }

@@ -1,6 +1,7 @@
 import MongoManager from '../managers/mongoManager.js';
 import FileSystemManager from '../managers/fileSystemManager.js';
 import UserSchema from '../schemas/userSchema.js';
+import { UserModel as UserSchema } from '../../models/user.model.js';
 import { v4 as uuidv4 } from 'uuid';
 
 class UserDAO {
