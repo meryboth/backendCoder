@@ -1,10 +1,7 @@
-// /routers/views.router.js
 import CustomRouter from './router.js';
 import ProductModel from '../models/product.model.js';
-import CartManager from '../controllers/cart-manager.js';
+import CartService from '../services/cart.services.js';
 import { authenticateJWT, isAdmin } from '../middlewares/auth.js';
-
-const cartManager = new CartManager();
 
 class ViewsRouter extends CustomRouter {
   init() {
@@ -45,7 +42,7 @@ class ViewsRouter extends CustomRouter {
     const cartId = req.params.cid;
 
     try {
-      const carrito = await cartManager.getCartById(cartId);
+      const carrito = await CartService.getCart(cartId);
 
       if (!carrito) {
         console.log('No cart found with the provided ID.');

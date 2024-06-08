@@ -1,4 +1,3 @@
-// routes/product.router.js
 import CustomRouter from './router.js';
 import ProductService from '../services/products.services.js';
 
@@ -30,12 +29,8 @@ class ProductRouter extends CustomRouter {
         page: productos.page,
         hasPrevPage: productos.hasPrevPage,
         hasNextPage: productos.hasNextPage,
-        prevLink: productos.hasPrevPage
-          ? `/api/products?limit=${limit}&page=${productos.prevPage}&sort=${sort}&query=${query}`
-          : null,
-        nextLink: productos.hasNextPage
-          ? `/api/products?limit=${limit}&page=${productos.nextPage}&sort=${sort}&query=${query}`
-          : null,
+        prevLink: productos.prevLink,
+        nextLink: productos.nextLink,
       });
     } catch (error) {
       console.error(
@@ -69,9 +64,9 @@ class ProductRouter extends CustomRouter {
 
     try {
       await ProductService.addProduct(nuevoProducto);
-      res.status(201).json({
-        message: 'The entered product was successfully added!',
-      });
+      res
+        .status(201)
+        .json({ message: 'The entered product was successfully added!' });
     } catch (error) {
       console.error('Error adding product', error);
       res.sendServerError('Internal server error');
@@ -84,9 +79,7 @@ class ProductRouter extends CustomRouter {
 
     try {
       await ProductService.updateProduct(id, productoActualizado);
-      res.json({
-        message: 'The product was successfully edited!',
-      });
+      res.json({ message: 'The product was successfully edited!' });
     } catch (error) {
       console.error('Error updating product', error);
       res.sendServerError('Internal server error');
@@ -98,9 +91,7 @@ class ProductRouter extends CustomRouter {
 
     try {
       await ProductService.deleteProduct(id);
-      res.json({
-        message: 'Product successfully deleted.',
-      });
+      res.json({ message: 'Product successfully deleted.' });
     } catch (error) {
       console.error('Error deleting product', error);
       res.sendServerError('Internal server error');
