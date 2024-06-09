@@ -3,13 +3,16 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as GithubStrategy } from 'passport-github2';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import bcrypt from 'bcrypt';
-import { UserModel } from '../models/user.model.js';
+import UserDAO from '../dao/models/userDAO.js';
 import CartService from '../services/cart.services.js';
 import configObject from '../config/config.js';
 
 const JWT_SECRET = configObject.jwt_secret;
 
 const initializePassport = () => {
+  const userDAO = new UserDAO(configObject.data_source);
+  console.log('UserDAO initialized with dataSource:', configObject.data_source); // Verificación
+
   // Estrategia de login local
   passport.use(
     'login',
@@ -17,7 +20,7 @@ const initializePassport = () => {
       { usernameField: 'email', passwordField: 'password' },
       async (email, password, done) => {
         try {
-          const user = await UserModel.findOne({ email });
+          const user = await userDAO.getUserByEmail(email);
           if (!user) {
             return done(null, false, { message: 'User not found' });
           }
@@ -44,7 +47,8 @@ const initializePassport = () => {
       },
       async (req, email, password, done) => {
         try {
-          const existingUser = await UserModel.findOne({ email });
+          console.log('Register strategy invoked'); // Verificación
+          const existingUser = await userDAO.getUserByEmail(email);
           if (existingUser) {
             return done(null, false, { message: 'Email already taken' });
           }
@@ -55,18 +59,25 @@ const initializePassport = () => {
 
           const newCart = await CartService.createCart([]);
 
-          const newUser = new UserModel({
+          const newUser = {
             first_name: req.body.first_name,
             last_name: req.body.last_name,
             email,
             password: hashedPassword,
             age: req.body.age,
             cart: newCart._id,
-          });
+          };
 
-          await newUser.save();
-          return done(null, newUser);
+          const createdUser = await userDAO.createUser(newUser);
+          console.log('Created User:', createdUser); // Depuración
+          // Verificar y asegurar que _id está presente
+          if (!createdUser._id) {
+            console.error('Error: createdUser does not have _id');
+            return done(null, false, { message: 'Error creating user' });
+          }
+          return done(null, createdUser);
         } catch (err) {
+          console.error('Error during user creation:', err); // Depuración
           return done(err);
         }
       }
@@ -82,7 +93,7 @@ const initializePassport = () => {
       },
       async (jwt_payload, done) => {
         try {
-          const user = await UserModel.findById(jwt_payload.id);
+          const user = await userDAO.getUserById(jwt_payload.id);
           if (user) {
             return done(null, user);
           }
@@ -104,21 +115,19 @@ const initializePassport = () => {
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
-          let user = await UserModel.findOne({
-            email: profile.emails[0].value,
-          });
+          let user = await userDAO.getUserByEmail(profile.emails[0].value);
           if (!user) {
             const newCart = await CartService.createCart([]);
 
-            const newUser = new UserModel({
+            const newUser = {
               first_name: profile.displayName || 'N/A',
               last_name: '',
               email: profile.emails[0].value,
               password: '',
               age: 0,
               cart: newCart._id,
-            });
-            user = await newUser.save();
+            };
+            user = await userDAO.createUser(newUser);
           }
           return done(null, user);
         } catch (err) {
@@ -129,12 +138,13 @@ const initializePassport = () => {
   );
 
   passport.serializeUser((user, done) => {
-    done(null, user.id);
+    console.log('Serializing user:', user); // Depuración
+    done(null, user._id || user.id); // Asegúrate de usar el campo correcto
   });
 
   passport.deserializeUser(async (id, done) => {
     try {
-      const user = await UserModel.findById(id);
+      const user = await userDAO.getUserById(id);
       done(null, user);
     } catch (err) {
       done(err);

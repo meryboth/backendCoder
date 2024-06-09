@@ -1,10 +1,23 @@
 import fs from 'fs';
 import path from 'path';
 import config from '../../config/config.js';
+import { fileURLToPath } from 'url';
+
+// Utilidades para obtener __dirname en módulos ES
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 class FileSystemManager {
   constructor(basePath) {
-    this.basePath = basePath;
+    this.basePath = path.resolve(__dirname, '../../../', basePath); // Asegurar que la ruta es relativa al proyecto raíz
+    this._ensureBasePathExists();
+  }
+
+  _ensureBasePathExists() {
+    if (!fs.existsSync(this.basePath)) {
+      fs.mkdirSync(this.basePath, { recursive: true });
+      console.log('Created base directory:', this.basePath); // Depuración
+    }
   }
 
   _getPath(filePath) {
@@ -13,7 +26,11 @@ class FileSystemManager {
 
   async readFile(filePath) {
     try {
-      const data = await fs.promises.readFile(this._getPath(filePath), 'utf-8');
+      const fullPath = this._getPath(filePath);
+      if (!fs.existsSync(fullPath)) {
+        await this.writeFile(filePath, []); // Crear archivo vacío si no existe
+      }
+      const data = await fs.promises.readFile(fullPath, 'utf-8');
       return JSON.parse(data);
     } catch (err) {
       console.error('File read error:', err);
@@ -23,11 +40,13 @@ class FileSystemManager {
 
   async writeFile(filePath, data) {
     try {
+      const fullPath = this._getPath(filePath);
       await fs.promises.writeFile(
-        this._getPath(filePath),
+        fullPath,
         JSON.stringify(data, null, 2),
         'utf-8'
       );
+      console.log('File written at:', fullPath); // Depuración
     } catch (err) {
       console.error('File write error:', err);
     }
@@ -35,7 +54,11 @@ class FileSystemManager {
 
   async deleteFile(filePath) {
     try {
-      await fs.promises.unlink(this._getPath(filePath));
+      const fullPath = this._getPath(filePath);
+      if (fs.existsSync(fullPath)) {
+        await fs.promises.unlink(fullPath);
+        console.log('File deleted at:', fullPath); // Depuración
+      }
     } catch (err) {
       console.error('File delete error:', err);
     }
