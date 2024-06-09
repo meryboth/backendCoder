@@ -1,6 +1,6 @@
 // middlewares/auth.js
 import jwt from 'jsonwebtoken';
-import UserModel from '../models/user.model.js';
+import { UserModel } from '../models/user.model.js';
 import configObject from '../config/config.js';
 
 const JWT_SECRET = configObject.jwt_secret;

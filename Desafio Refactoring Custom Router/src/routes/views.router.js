@@ -1,6 +1,6 @@
 import CustomRouter from './router.js';
 import mongoose from 'mongoose';
-import productSchema from '../models/product.model.js'; // Importar el esquema
+import { productSchema } from '../models/product.model.js'; // Importar el esquema
 import { authenticateJWT, isAdmin } from '../middlewares/auth.js';
 
 // Crear el modelo a partir del esquema

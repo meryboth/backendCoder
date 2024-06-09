@@ -5,7 +5,7 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as GithubStrategy } from 'passport-github2';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import bcrypt from 'bcrypt';
-import UserModel from '../models/user.model.js';
+import { UserModel } from '../models/user.model.js';
 import CartService from '../services/cart.services.js';
 import configObject from '../config/config.js';
 
