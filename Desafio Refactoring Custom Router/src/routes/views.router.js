@@ -1,7 +1,10 @@
 import CustomRouter from './router.js';
-import ProductModel from '../models/product.model.js';
-import CartService from '../services/cart.services.js';
+import mongoose from 'mongoose';
+import productSchema from '../models/product.model.js'; // Importar el esquema
 import { authenticateJWT, isAdmin } from '../middlewares/auth.js';
+
+// Crear el modelo a partir del esquema
+const ProductModel = mongoose.model('products', productSchema);
 
 class ViewsRouter extends CustomRouter {
   init() {
@@ -42,7 +45,7 @@ class ViewsRouter extends CustomRouter {
     const cartId = req.params.cid;
 
     try {
-      const carrito = await CartService.getCart(cartId);
+      const carrito = await cartManager.getCartById(cartId);
 
       if (!carrito) {
         console.log('No cart found with the provided ID.');
