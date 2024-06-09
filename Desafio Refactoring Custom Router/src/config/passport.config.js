@@ -1,5 +1,3 @@
-// config/passport.js
-
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as GithubStrategy } from 'passport-github2';
@@ -9,7 +7,6 @@ import { UserModel } from '../models/user.model.js';
 import CartService from '../services/cart.services.js';
 import configObject from '../config/config.js';
 
-const cartManager = CartService;
 const JWT_SECRET = configObject.jwt_secret;
 
 const initializePassport = () => {
@@ -56,7 +53,7 @@ const initializePassport = () => {
             bcrypt.genSaltSync(10)
           );
 
-          const newCart = await cartManager.newCart([]);
+          const newCart = await CartService.createCart([]);
 
           const newUser = new UserModel({
             first_name: req.body.first_name,
@@ -111,7 +108,7 @@ const initializePassport = () => {
             email: profile.emails[0].value,
           });
           if (!user) {
-            const newCart = await cartManager.newCart([]);
+            const newCart = await CartService.createCart([]);
 
             const newUser = new UserModel({
               first_name: profile.displayName || 'N/A',
