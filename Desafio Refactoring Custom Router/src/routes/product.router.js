@@ -6,9 +6,9 @@ class ProductRouter extends CustomRouter {
   init() {
     this.get('/', this.getAllProducts);
     this.get('/:pid', this.getProductById);
-    this.post('/', [authenticateJWT, isAdmin], this.addProduct);
-    this.put('/:pid', [authenticateJWT, isAdmin], this.updateProduct);
-    this.delete('/:pid', [authenticateJWT, isAdmin], this.deleteProduct);
+    this.post('/', authenticateJWT, isAdmin, this.addProduct);
+    this.put('/:pid', authenticateJWT, isAdmin, this.updateProduct);
+    this.delete('/:pid', authenticateJWT, isAdmin, this.deleteProduct);
   }
 
   async getAllProducts(req, res) {
@@ -67,12 +67,10 @@ class ProductRouter extends CustomRouter {
       console.log('Nuevo producto recibido:', nuevoProducto); // Depuración
       const createdProduct = await ProductService.addProduct(nuevoProducto);
       console.log('Producto creado:', createdProduct); // Depuración
-      res
-        .status(201)
-        .json({
-          message: 'The entered product was successfully added!',
-          product: createdProduct,
-        });
+      res.status(201).json({
+        message: 'The entered product was successfully added!',
+        product: createdProduct,
+      });
     } catch (error) {
       console.error('Error adding product:', error);
       res.status(500).send('Internal server error');
