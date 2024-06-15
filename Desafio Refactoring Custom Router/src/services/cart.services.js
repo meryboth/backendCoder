@@ -1,95 +1,36 @@
-// services/cart.service.js
-import CartModel from '../models/cart.model.js';
+import DAOFactory from '../dao/daoFactory.js';
+import config from '../config/config.js';
+
+const dataSource = config.data_source || 'mongo'; // Usa mongo por defecto
+const cartDAO = DAOFactory.getDAO('carts', dataSource);
 
 class CartService {
   async createCart(products) {
-    const nuevoCarrito = new CartModel({ products });
-    await nuevoCarrito.save();
-    return nuevoCarrito;
+    return await cartDAO.createCart(products);
   }
 
   async getCart(cartId) {
-    const carrito = await CartModel.findById(cartId);
-    if (!carrito) {
-      throw new Error('Carrito no encontrado');
-    }
-    return carrito;
+    return await cartDAO.getCartById(cartId);
   }
 
   async addProductToCart(cartId, productId, quantity) {
-    const carrito = await CartModel.findById(cartId);
-    if (!carrito) {
-      throw new Error('Carrito no encontrado');
-    }
-
-    const productIndex = carrito.products.findIndex(
-      (product) => product.productId.toString() === productId
-    );
-
-    if (productIndex > -1) {
-      carrito.products[productIndex].quantity += quantity;
-    } else {
-      carrito.products.push({ productId, quantity });
-    }
-
-    await carrito.save();
-    return carrito;
+    return await cartDAO.addProductToCart(cartId, productId, quantity);
   }
 
   async deleteProductFromCart(cartId, productId) {
-    const carrito = await CartModel.findById(cartId);
-    if (!carrito) {
-      throw new Error('Carrito no encontrado');
-    }
-
-    carrito.products = carrito.products.filter(
-      (product) => product.productId.toString() !== productId
-    );
-
-    await carrito.save();
-    return carrito;
+    return await cartDAO.deleteProductFromCart(cartId, productId);
   }
 
   async updateCart(cartId, updatedProducts) {
-    const carrito = await CartModel.findById(cartId);
-    if (!carrito) {
-      throw new Error('Carrito no encontrado');
-    }
-
-    carrito.products = updatedProducts;
-    await carrito.save();
-    return carrito;
+    return await cartDAO.updateCart(cartId, updatedProducts);
   }
 
   async updateProductQuantity(cartId, productId, newQuantity) {
-    const carrito = await CartModel.findById(cartId);
-    if (!carrito) {
-      throw new Error('Carrito no encontrado');
-    }
-
-    const productIndex = carrito.products.findIndex(
-      (product) => product.productId.toString() === productId
-    );
-
-    if (productIndex > -1) {
-      carrito.products[productIndex].quantity = newQuantity;
-    } else {
-      throw new Error('Producto no encontrado en el carrito');
-    }
-
-    await carrito.save();
-    return carrito;
+    return await cartDAO.updateQuantity(cartId, productId, newQuantity);
   }
 
   async emptyCart(cartId) {
-    const carrito = await CartModel.findById(cartId);
-    if (!carrito) {
-      throw new Error('Carrito no encontrado');
-    }
-
-    carrito.products = [];
-    await carrito.save();
-    return carrito;
+    return await cartDAO.emptyCart(cartId);
   }
 }
 

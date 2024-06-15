@@ -1,10 +1,9 @@
-// /routers/views.router.js
 import CustomRouter from './router.js';
-import ProductModel from '../models/product.model.js';
-import CartManager from '../controllers/cart-manager.js';
+import mongoose from 'mongoose';
+import { productSchema } from '../models/product.model.js';
 import { authenticateJWT, isAdmin } from '../middlewares/auth.js';
 
-const cartManager = new CartManager();
+const ProductModel = mongoose.model('products', productSchema);
 
 class ViewsRouter extends CustomRouter {
   init() {
