@@ -1,6 +1,6 @@
 import mongoManager from '../managers/mongoManager.js';
 import FileSystemManager from '../managers/fileSystemManager.js';
-import { ProductModel, productSchema } from '../../models/product.model.js'; // Importar ambos
+import { ProductModel, productSchema } from '../../models/product.model.js';
 import { v4 as uuidv4 } from 'uuid';
 
 class ProductDAO {
@@ -15,6 +15,7 @@ class ProductDAO {
 
   async createProduct(productData) {
     if (this.model) {
+      console.log('Creating product in MongoDB:', productData); // Depuración
       const product = new this.model(productData);
       return await product.save();
     } else if (this.fileSystem) {

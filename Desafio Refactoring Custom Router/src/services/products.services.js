@@ -1,8 +1,7 @@
 import DAOFactory from '../dao/daoFactory.js';
 import config from '../config/config.js';
 
-const dataSource = config.data_source || 'mongo'; // Utiliza mongo por defecto
-const productDAO = DAOFactory.getDAO('products', dataSource);
+const productDAO = DAOFactory.getDAO('products', config.data_source);
 
 class ProductService {
   async getProducts({ limit = 10, page = 1, sort, query }) {
@@ -18,7 +17,9 @@ class ProductService {
   }
 
   async addProduct(productData) {
+    console.log('Adding product:', productData); // Depuración
     const nuevoProducto = await productDAO.createProduct(productData);
+    console.log('Product added successfully:', nuevoProducto); // Depuración
     return nuevoProducto;
   }
 

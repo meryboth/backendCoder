@@ -1,7 +1,11 @@
 import express from 'express';
 import passport from 'passport';
 import { authenticateJWT } from '../middlewares/auth.js';
-import { registerUser, getUserProfile } from '../services/user.service.js';
+import {
+  registerUser,
+  getUserProfile,
+  getCurrentUser,
+} from '../services/user.service.js';
 
 const router = express.Router();
 
@@ -38,6 +42,19 @@ router.get('/profile', authenticateJWT, async (req, res) => {
     const user = await getUserProfile(req.user.id);
     res.render('profile', { user: user.toObject() });
   } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+// Ruta para obtener la información actual del usuario
+router.get('/current', authenticateJWT, async (req, res) => {
+  try {
+    const userEmail = req.user.email;
+    console.log('Fetching current user for email:', userEmail); // Depuración
+    const user = await getCurrentUser(userEmail);
+    res.json(user);
+  } catch (error) {
+    console.error('Error fetching current user:', error); // Depuración
     res.status(500).send(error.message);
   }
 });

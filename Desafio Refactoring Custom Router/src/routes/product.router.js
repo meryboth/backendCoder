@@ -1,13 +1,14 @@
 import CustomRouter from './router.js';
 import ProductService from '../services/products.services.js';
+import { authenticateJWT, isAdmin } from '../middlewares/auth.js';
 
 class ProductRouter extends CustomRouter {
   init() {
     this.get('/', this.getAllProducts);
     this.get('/:pid', this.getProductById);
-    this.post('/', this.addProduct);
-    this.put('/:pid', this.updateProduct);
-    this.delete('/:pid', this.deleteProduct);
+    this.post('/', [authenticateJWT, isAdmin], this.addProduct);
+    this.put('/:pid', [authenticateJWT, isAdmin], this.updateProduct);
+    this.delete('/:pid', [authenticateJWT, isAdmin], this.deleteProduct);
   }
 
   async getAllProducts(req, res) {
@@ -37,7 +38,7 @@ class ProductRouter extends CustomRouter {
         'An error occurred while attempting to retrieve the list of products:',
         error
       );
-      res.sendServerError('Server error while querying.');
+      res.status(500).send('Server error while querying.');
     }
   }
 
@@ -47,15 +48,15 @@ class ProductRouter extends CustomRouter {
     try {
       const producto = await ProductService.getProductById(id);
       if (!producto) {
-        return res.sendUserError(
-          'The product with the requested ID was not found.'
-        );
+        return res
+          .status(404)
+          .send('The product with the requested ID was not found.');
       }
 
       res.json(producto);
     } catch (error) {
-      console.error('Error retrieving product', error);
-      res.sendServerError('Internal server error');
+      console.error('Error retrieving product:', error);
+      res.status(500).send('Internal server error');
     }
   }
 
@@ -63,13 +64,18 @@ class ProductRouter extends CustomRouter {
     const nuevoProducto = req.body;
 
     try {
-      await ProductService.addProduct(nuevoProducto);
+      console.log('Nuevo producto recibido:', nuevoProducto); // Depuración
+      const createdProduct = await ProductService.addProduct(nuevoProducto);
+      console.log('Producto creado:', createdProduct); // Depuración
       res
         .status(201)
-        .json({ message: 'The entered product was successfully added!' });
+        .json({
+          message: 'The entered product was successfully added!',
+          product: createdProduct,
+        });
     } catch (error) {
-      console.error('Error adding product', error);
-      res.sendServerError('Internal server error');
+      console.error('Error adding product:', error);
+      res.status(500).send('Internal server error');
     }
   }
 
@@ -78,11 +84,17 @@ class ProductRouter extends CustomRouter {
     const productoActualizado = req.body;
 
     try {
-      await ProductService.updateProduct(id, productoActualizado);
-      res.json({ message: 'The product was successfully edited!' });
+      const updatedProduct = await ProductService.updateProduct(
+        id,
+        productoActualizado
+      );
+      res.json({
+        message: 'The product was successfully edited!',
+        product: updatedProduct,
+      });
     } catch (error) {
-      console.error('Error updating product', error);
-      res.sendServerError('Internal server error');
+      console.error('Error updating product:', error);
+      res.status(500).send('Internal server error');
     }
   }
 
@@ -93,8 +105,8 @@ class ProductRouter extends CustomRouter {
       await ProductService.deleteProduct(id);
       res.json({ message: 'Product successfully deleted.' });
     } catch (error) {
-      console.error('Error deleting product', error);
-      res.sendServerError('Internal server error');
+      console.error('Error deleting product:', error);
+      res.status(500).send('Internal server error');
     }
   }
 }

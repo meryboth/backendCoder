@@ -1,16 +1,34 @@
-// routes/cart.router.js
 import CustomRouter from './router.js';
 import CartService from '../services/cart.services.js';
+import TicketService from '../services/ticket.service.js';
+import { authenticateJWT, isUser } from '../middlewares/auth.js';
 
 class CartRouter extends CustomRouter {
   init() {
     this.post('/', this.createCart);
     this.get('/:cid', this.getCart);
-    this.post('/:cid/product/:pid', this.addProductToCart);
-    this.delete('/:cid/product/:pid', this.deleteProductFromCart);
+    this.post(
+      '/:cid/product/:pid',
+      /*  [authenticateJWT, isUser], */
+      this.addProductToCart
+    );
+    this.delete(
+      '/:cid/product/:pid',
+      /* [authenticateJWT, isUser], */
+      this.deleteProductFromCart
+    );
     this.put('/:cid', this.updateCart);
     this.put('/:cid/product/:pid', this.updateProductQuantity);
     this.delete('/:cid', this.emptyCart);
+
+    // Nueva ruta para finalizar la compra
+    /* this.post('/purchase', [authenticateJWT, isUser], this.purchaseCart); */
+    this.post('/purchase', this.purchaseCart);
+
+    // Rutas para manejar tickets
+    this.get('/purchase/tickets/:id', this.getTicketById);
+    this.get('/purchase/tickets', this.getAllTickets);
+    this.delete('/purchase/tickets/:id', this.deleteTicket);
   }
 
   async createCart(req, res) {
@@ -129,6 +147,51 @@ class CartRouter extends CustomRouter {
     } catch (error) {
       console.error('Error al vaciar el carrito', error);
       res.sendServerError('Error interno del servidor');
+    }
+  }
+
+  async purchaseCart(req, res) {
+    try {
+      const userId = req.user._id;
+      const result = await CartService.purchaseCart(userId);
+      res.status(200).json(result);
+    } catch (error) {
+      console.error('Error al finalizar la compra', error);
+      res.sendServerError('Error interno del servidor');
+    }
+  }
+
+  // Métodos para manejar tickets
+  async getTicketById(req, res) {
+    try {
+      const ticket = await TicketService.getTicketById(req.params.id);
+      if (!ticket) {
+        return res.status(404).json({ error: 'Ticket not found' });
+      }
+      res.status(200).json(ticket);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  async getAllTickets(req, res) {
+    try {
+      const tickets = await TicketService.getAllTickets();
+      res.status(200).json(tickets);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  async deleteTicket(req, res) {
+    try {
+      const ticket = await TicketService.deleteTicket(req.params.id);
+      if (!ticket) {
+        return res.status(404).json({ error: 'Ticket not found' });
+      }
+      res.status(200).json({ message: 'Ticket deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
     }
   }
 }
