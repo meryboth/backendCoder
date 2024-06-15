@@ -9,7 +9,6 @@ import viewsRouter from './routes/views.router.js';
 import cartRouter from './routes/cart.router.js';
 import sessionRouter from './routes/session.router.js';
 import userRouter from './routes/user.router.js';
-import ticketRouter from './routes/ticket.router.js'; // Importa el router de tickets
 import passport from 'passport';
 import initializePassport from './config/passport.config.js';
 import notFoundHandler from './middlewares/notfoundHandler.js';
@@ -43,7 +42,6 @@ app.set('views', './src/views');
 app.use('/', viewsRouter);
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartRouter);
-app.use('/api/tickets', ticketRouter);
 app.use('/api/users', userRouter);
 app.use('/api/sessions', sessionRouter);
 app.use('*', notFoundHandler);

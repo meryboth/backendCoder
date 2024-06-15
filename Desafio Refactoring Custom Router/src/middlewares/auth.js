@@ -6,6 +6,7 @@ const JWT_SECRET = config.jwt_secret;
 
 export const authenticateJWT = async (req, res, next) => {
   const token = req.cookies.jwt || req.headers.authorization?.split(' ')[1];
+
   if (!token) {
     console.log('Access denied. No token provided.'); // Depuración
     return res.status(401).send('Access denied. No token provided.');
@@ -14,11 +15,14 @@ export const authenticateJWT = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     console.log('Token decoded:', decoded); // Depuración
-    const user = await UserModel.findById(decoded.id).populate('cart').lean();
+
+    const user = await UserModel.findById(decoded.id).lean();
+
     if (!user) {
       console.log('User not found.'); // Depuración
       return res.status(404).send('User not found');
     }
+
     req.user = user;
     console.log('User authenticated:', req.user); // Depuración
     next();
@@ -43,7 +47,7 @@ export const isAdmin = (req, res, next) => {
 export const isUser = async (req, res, next) => {
   try {
     const userEmail = req.user.email;
-    const user = await getCurrentUser(userEmail);
+    const user = await UserModel.findOne({ email: userEmail });
     if (user.role === 'user') {
       next(); // El usuario tiene el rol de usuario, continúa con la siguiente función middleware
     } else {
