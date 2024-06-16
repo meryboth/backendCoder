@@ -7,31 +7,62 @@ class CartDAO {
   constructor(dataSource) {
     if (dataSource === 'mongo') {
       this.model = MongoManager.connection.model('carts', cartSchema);
+      console.log('CartDAO using MongoDB'); // Debugging
     } else if (dataSource === 'fileSystem') {
       this.fileSystem = FileSystemManager;
       this.filePath = 'carts.json';
+      console.log('CartDAO using FileSystem'); // Debugging
     }
   }
 
   async createCart(products) {
+    console.log('Creating cart with products:', products); // Debugging
     if (this.model) {
-      const cart = new this.model({ products });
-      return await cart.save();
+      try {
+        const cart = new this.model({ products });
+        const savedCart = await cart.save();
+        console.log('Cart saved in MongoDB:', savedCart); // Debugging
+        return savedCart;
+      } catch (error) {
+        console.error('Error creating cart in MongoDB:', error); // Debugging
+        throw error;
+      }
     } else if (this.fileSystem) {
-      const carts = (await this.fileSystem.readFile(this.filePath)) || [];
-      const newCart = { id: uuidv4(), products };
-      carts.push(newCart);
-      await this.fileSystem.writeFile(this.filePath, carts);
-      return newCart;
+      try {
+        const carts = (await this.fileSystem.readFile(this.filePath)) || [];
+        const newCart = { id: uuidv4(), products };
+        carts.push(newCart);
+        await this.fileSystem.writeFile(this.filePath, carts);
+        console.log('Cart saved in FileSystem:', newCart); // Debugging
+        return newCart;
+      } catch (error) {
+        console.error('Error creating cart in FileSystem:', error); // Debugging
+        throw error;
+      }
     }
   }
 
   async getCartById(cartId) {
+    console.log('Getting cart by ID:', cartId); // Debugging
     if (this.model) {
-      return await this.model.findById(cartId);
+      try {
+        const cart = await this.model.findById(cartId);
+        console.log('Cart found in MongoDB:', cart); // Debugging
+        return cart;
+      } catch (error) {
+        console.error('Error getting cart from MongoDB:', error); // Debugging
+        throw error;
+      }
     } else if (this.fileSystem) {
-      const carts = (await this.fileSystem.readFile(this.filePath)) || [];
-      return carts.find((cart) => cart.id === cartId);
+      try {
+        const carts = (await this.fileSystem.readFile(this.filePath)) || [];
+        const cart = carts.find((cart) => cart.id === cartId);
+        console.log('Cart found in FileSystem:', cart); // Debugging
+        return cart;
+      } catch (error) {
+        console.error('Error getting cart from FileSystem:', error); // Debugging
+        throw error;
+      }
     }
   }
 
@@ -146,6 +177,46 @@ class CartDAO {
         await this.fileSystem.writeFile(this.filePath, carts);
         return cart;
       }
+    }
+  }
+
+  async purchaseCart(cartId, userId) {
+    if (this.model) {
+      const cart = await this.model
+        .findById(cartId)
+        .populate('products.product');
+      if (!cart) throw new Error('Cart not found');
+
+      const purchasedProducts = [];
+      const notPurchasedProducts = [];
+      let totalAmount = 0;
+
+      for (const item of cart.products) {
+        const product = await ProductDAO.getProductById(item.product._id);
+        if (product.stock >= item.quantity) {
+          product.stock -= item.quantity;
+          await ProductDAO.updateProduct(product._id, { stock: product.stock });
+          purchasedProducts.push(item);
+          totalAmount += product.price * item.quantity;
+        } else {
+          notPurchasedProducts.push(item);
+        }
+      }
+
+      const ticket = new TicketModel({
+        code: uuidv4(),
+        amount: totalAmount,
+        purchaser: userId,
+      });
+      await ticket.save();
+
+      cart.products = notPurchasedProducts;
+      await cart.save();
+
+      return {
+        ticket,
+        notPurchasedProducts,
+      };
     }
   }
 }

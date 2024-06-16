@@ -20,7 +20,7 @@ router.post(
       }
       const token = loginUser(req.user);
       res.cookie('jwt', token, { httpOnly: true, secure: false });
-      res.redirect('/profile');
+      res.json({ token });
     } catch (error) {
       res.status(500).send(error.message);
     }
