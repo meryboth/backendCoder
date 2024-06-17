@@ -9,6 +9,7 @@ import viewsRouter from './routes/views.router.js';
 import cartRouter from './routes/cart.router.js';
 import sessionRouter from './routes/session.router.js';
 import userRouter from './routes/user.router.js';
+import emailRouter from './routes/email.router.js';
 import passport from 'passport';
 import initializePassport from './config/passport.config.js';
 import notFoundHandler from './middlewares/notfoundHandler.js';
@@ -44,6 +45,7 @@ app.use('/api/products', productsRouter);
 app.use('/api/carts', cartRouter);
 app.use('/api/users', userRouter);
 app.use('/api/sessions', sessionRouter);
+app.use('/email', emailRouter);
 app.use('*', notFoundHandler);
 
 /* listen */
