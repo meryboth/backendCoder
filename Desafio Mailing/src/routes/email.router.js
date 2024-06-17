@@ -56,11 +56,9 @@ router.post('/enviarmensaje', async (req, res) => {
 
 /* TWILIO INTEGRATION */
 
-const twilioAccountID = '...';
+const twilioAccountID = 'AC...';
 const twilioAuthToken = '...';
 const twilioPhoneNumber = '...';
-
-/* Client configuration */
 const client = twilio(twilioAccountID, twilioAuthToken, twilioPhoneNumber);
 
 router.get('/sms', async (req, res) => {

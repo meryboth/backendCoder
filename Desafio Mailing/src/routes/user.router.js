@@ -6,8 +6,19 @@ import {
   getUserProfile,
   getCurrentUser,
 } from '../services/user.service.js';
+import { userGenerator } from '../utils/userGenerator.js';
 
 const router = express.Router();
+
+//Faker para generar usuarios mock
+
+router.get('/mock', (req, res) => {
+  const users = [];
+  for (let i = 0; i < 100; i++) {
+    users.push(userGenerator());
+  }
+  res.send(users);
+});
 
 // Ruta de registro de usuario
 router.post('/register', (req, res, next) => {
