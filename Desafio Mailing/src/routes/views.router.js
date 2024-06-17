@@ -8,6 +8,7 @@ const ProductModel = mongoose.model('products', productSchema);
 class ViewsRouter extends CustomRouter {
   init() {
     this.get('/', this.getProducts);
+    this.get('/contact', this.renderContact);
     this.get('/carts/:cid', this.getCart);
     this.get('/login', this.renderLogin);
     this.get('/register', this.renderRegister);
@@ -69,6 +70,10 @@ class ViewsRouter extends CustomRouter {
 
   renderRegister(req, res) {
     res.render('register');
+  }
+
+  renderContact(req, res) {
+    res.render('contact');
   }
 
   renderProfile(req, res) {
