@@ -1,6 +1,7 @@
 import express from 'express';
 import nodemailer from 'nodemailer';
 import path from 'path';
+import twilio from 'twilio';
 
 const router = express.Router();
 
@@ -16,7 +17,7 @@ const transport = nodemailer.createTransport({
 router.get('/', async (req, res) => {
   try {
     const filePath = path.resolve('./src/public/img/vinilo.png');
-    console.log(`Attachment path: ${filePath}`); // Añade este log para verificar la ruta
+    console.log(`Attachment path: ${filePath}`);
     await transport.sendMail({
       from: 'Marilyn Botheatoz <mbotheatoz@gmail.com>',
       to: 'mbotheatoz@gmail.com',
@@ -33,7 +34,7 @@ router.get('/', async (req, res) => {
     });
     res.send('Correo enviado con éxito');
   } catch (error) {
-    console.error(`Error al enviar el correo: ${error.message}`); // Log del error detallado
+    console.error(`Error al enviar el correo: ${error.message}`);
     res.status(500).send(`Error al enviar el correo: ${error.message}`);
   }
 });
@@ -50,6 +51,28 @@ router.post('/enviarmensaje', async (req, res) => {
     res.send('Correo enviado');
   } catch (error) {
     res.status(500).send('Error al enviar el mensaje!');
+  }
+});
+
+/* TWILIO INTEGRATION */
+
+const twilioAccountID = '...';
+const twilioAuthToken = '...';
+const twilioPhoneNumber = '...';
+
+/* Client configuration */
+const client = twilio(twilioAccountID, twilioAuthToken, twilioPhoneNumber);
+
+router.get('/sms', async (req, res) => {
+  try {
+    await client.messages.create({
+      body: 'Tu pedido ya está listo, puedes venir a retirarlo',
+      from: twilioPhoneNumber,
+      to: '+541135932226',
+    });
+    res.send('SMS enviado con éxito');
+  } catch (error) {
+    res.status(500).send('Error al enviar el SMS');
   }
 });
 
