@@ -7,11 +7,16 @@ import {
   getCurrentUser,
 } from '../services/user.service.js';
 import { userGenerator } from '../utils/userGenerator.js';
+import CustomError from '../services/errors/CustomError.js';
+import { ERROR_TYPES } from '../services/errors/enum.js';
+import {
+  generateUserError,
+  generateAuthenticationError,
+} from '../services/errors/info.js';
 
 const router = express.Router();
 
-//Faker para generar usuarios mock
-
+// Faker para generar usuarios mock
 router.get('/mock', (req, res) => {
   const users = [];
   for (let i = 0; i < 100; i++) {
@@ -29,11 +34,25 @@ router.post('/register', (req, res, next) => {
     async (err, user, info) => {
       if (err) {
         console.error('Error in Passport authenticate:', err); // Depuración
-        return next(err);
+        return next(
+          CustomError.createError({
+            name: 'Authentication Error',
+            cause: generateAuthenticationError(),
+            message: err.message,
+            type: 'AUTHENTICATION_ERROR',
+          })
+        );
       }
       if (!user) {
         console.log('User registration failed:', info.message); // Depuración
-        return res.status(400).send('Registration failed');
+        return next(
+          CustomError.createError({
+            name: 'User Registration Error',
+            cause: generateUserError(req.body),
+            message: info.message,
+            type: 'INVALID_TYPES_ERROR',
+          })
+        );
       }
       try {
         const { token } = await registerUser(user);
@@ -41,24 +60,38 @@ router.post('/register', (req, res, next) => {
         res.redirect('/profile'); // Redirigir al perfil del usuario
       } catch (error) {
         console.error('Error in registerUser:', error); // Depuración
-        res.status(500).send(error.message);
+        return next(
+          CustomError.createError({
+            name: 'Database Error',
+            cause: 'Error in registerUser',
+            message: error.message,
+            type: 'DATABASE_ERROR',
+          })
+        );
       }
     }
   )(req, res, next);
 });
 
 // Ruta de perfil de usuario
-router.get('/profile', authenticateJWT, async (req, res) => {
+router.get('/profile', authenticateJWT, async (req, res, next) => {
   try {
     const user = await getUserProfile(req.user.id);
     res.render('profile', { user: user.toObject() });
   } catch (error) {
-    res.status(500).send(error.message);
+    return next(
+      CustomError.createError({
+        name: 'Database Error',
+        cause: 'Error fetching user profile',
+        message: error.message,
+        type: 'DATABASE_ERROR',
+      })
+    );
   }
 });
 
 // Ruta para obtener la información actual del usuario
-router.get('/current', authenticateJWT, async (req, res) => {
+router.get('/current', authenticateJWT, async (req, res, next) => {
   try {
     const userEmail = req.user.email;
     console.log('Fetching current user for email:', userEmail); // Depuración
@@ -66,7 +99,14 @@ router.get('/current', authenticateJWT, async (req, res) => {
     res.json(user);
   } catch (error) {
     console.error('Error fetching current user:', error); // Depuración
-    res.status(500).send(error.message);
+    return next(
+      CustomError.createError({
+        name: 'Database Error',
+        cause: 'Error fetching current user',
+        message: error.message,
+        type: 'DATABASE_ERROR',
+      })
+    );
   }
 });
 
