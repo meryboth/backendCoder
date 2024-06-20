@@ -15,6 +15,7 @@ import initializePassport from './config/passport.config.js';
 import notFoundHandler from './middlewares/notfoundHandler.js';
 import config from './config/config.js';
 import cors from 'cors';
+import compression from 'express-compression';
 
 const app = express();
 
@@ -32,6 +33,11 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(cors());
+app.use(
+  compression({
+    brotli: { enabled: true, zlib: {} },
+  })
+);
 initializePassport();
 
 /* handlebars */
