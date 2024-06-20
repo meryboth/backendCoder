@@ -1,9 +1,13 @@
 import CustomRouter from './router.js';
 import ProductService from '../services/products.services.js';
 import { authenticateJWT, isAdmin } from '../middlewares/auth.js';
+import { productGenerator } from '../utils/productGenerator.js';
 
 class ProductRouter extends CustomRouter {
   init() {
+    /* mock of products */
+    this.get('/mockingproducts', this.generateMockProducts);
+
     this.get('/', this.getAllProducts);
     this.get('/:pid', this.getProductById);
     this.post('/', authenticateJWT, isAdmin, this.addProduct);
@@ -106,6 +110,14 @@ class ProductRouter extends CustomRouter {
       console.error('Error deleting product:', error);
       res.status(500).send('Internal server error');
     }
+  }
+
+  generateMockProducts(req, res) {
+    const products = [];
+    for (let i = 0; i < 100; i++) {
+      products.push(productGenerator());
+    }
+    res.send(products);
   }
 }
 
