@@ -16,6 +16,7 @@ import notFoundHandler from './middlewares/notfoundHandler.js';
 import config from './config/config.js';
 import cors from 'cors';
 import compression from 'express-compression';
+import errorHandler from './middlewares/errorHandler.js';
 
 const app = express();
 
@@ -53,6 +54,7 @@ app.use('/api/users', userRouter);
 app.use('/api/sessions', sessionRouter);
 app.use('/email', emailRouter);
 app.use('*', notFoundHandler);
+app.use(errorHandler);
 
 /* listen */
 const PORT = config.port;
