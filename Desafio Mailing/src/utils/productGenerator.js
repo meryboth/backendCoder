@@ -2,12 +2,14 @@ import { faker } from '@faker-js/faker';
 
 export const productGenerator = () => {
   return {
-    id: faker.database.mongodbObjectId(),
-    name: faker.commerce.productName(),
+    title: faker.commerce.productName(),
     description: faker.commerce.productDescription(),
-    price: faker.commerce.price(),
-    category: faker.commerce.department(),
-    image: faker.image.url(),
+    price: parseFloat(faker.commerce.price()),
+    img: faker.image.imageUrl(),
+    code: faker.datatype.uuid(),
     stock: faker.datatype.number({ min: 0, max: 1000 }),
+    category: faker.commerce.department(),
+    status: faker.datatype.boolean(),
+    thumbnails: [faker.image.imageUrl(), faker.image.imageUrl()],
   };
 };
