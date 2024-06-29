@@ -17,12 +17,14 @@ import config from './config/config.js';
 import cors from 'cors';
 import compression from 'express-compression';
 import errorHandler from './middlewares/errorHandler.js';
+import addLogger from './utils/logger.js';
 
 const app = express();
 
 /* middlewares */
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(addLogger);
 app.use(express.static('./src/public'));
 app.use(cookieParser());
 app.use(
@@ -55,6 +57,16 @@ app.use('/api/sessions', sessionRouter);
 app.use('/email', emailRouter);
 app.use('*', notFoundHandler);
 app.use(errorHandler);
+
+/* Route to test Logger */
+app.get('/loggertest', (req, res) => {
+  req.logger.http('Mensaje HTTP');
+  req.logger.info('Mensaje INFO');
+  req.logger.warning('Mensaje WARNING');
+  req.logger.error('Mensaje ERROR');
+
+  res.send('Logs generados');
+});
 
 /* listen */
 const PORT = config.port;

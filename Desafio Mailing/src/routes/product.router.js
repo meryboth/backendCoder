@@ -1,9 +1,14 @@
 import CustomRouter from './router.js';
 import ProductService from '../services/products.services.js';
 import { authenticateJWT, isAdmin } from '../middlewares/auth.js';
+import { productGenerator } from '../utils/productGenerator.js';
+import { ProductModel } from '../models/product.model.js';
 
 class ProductRouter extends CustomRouter {
   init() {
+    /* mock of products */
+    this.get('/mockingproducts', this.generateMockProducts);
+
     this.get('/', this.getAllProducts);
     this.get('/:pid', this.getProductById);
     this.post('/', authenticateJWT, isAdmin, this.addProduct);
@@ -104,6 +109,26 @@ class ProductRouter extends CustomRouter {
       res.json({ message: 'Product successfully deleted.' });
     } catch (error) {
       console.error('Error deleting product:', error);
+      res.status(500).send('Internal server error');
+    }
+  }
+
+  async generateMockProducts(req, res) {
+    const products = [];
+    for (let i = 0; i < 100; i++) {
+      const newProduct = productGenerator();
+      products.push(newProduct);
+    }
+
+    try {
+      const result = await ProductModel.insertMany(products);
+      console.log('Productos mock generados y guardados:', result);
+      res.json({
+        message: 'Mock products generated and saved successfully!',
+        products: result,
+      });
+    } catch (error) {
+      console.error('Error generating mock products:', error);
       res.status(500).send('Internal server error');
     }
   }
