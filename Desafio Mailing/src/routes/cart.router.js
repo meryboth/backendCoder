@@ -1,22 +1,25 @@
-// routes/cart.router.js
 import express from 'express';
 import CartService from '../services/cart.services.js';
 import { authenticateJWT, isUser } from '../middlewares/auth.js';
 
 const router = express.Router();
 
-router.post('/', async (req, res) => {
+router.post('/', authenticateJWT, async (req, res) => {
   try {
     const products = req.body.products;
+    const userEmail = req.user.email;
     console.log('Request to create cart with products:', products); // Debugging
-    const newCart = await CartService.createCart(products);
+    const newCart = await CartService.createCart(products, userEmail);
     res.json(newCart);
   } catch (error) {
     console.error('Error al crear un nuevo carrito', error);
-    res.status(500).send('Error interno del servidor');
+    if (error.message === 'You cannot add your own product to the cart.') {
+      res.status(403).send('You cannot add your own product to the cart.');
+    } else {
+      res.status(500).send('Error interno del servidor');
+    }
   }
 });
-
 router.get('/:cid', async (req, res) => {
   const cartId = req.params.cid;
 
@@ -29,21 +32,27 @@ router.get('/:cid', async (req, res) => {
   }
 });
 
-router.post('/:cid/product/:pid', authenticateJWT, isUser, async (req, res) => {
+router.post('/:cid/product/:pid', authenticateJWT, async (req, res) => {
   const cartId = req.params.cid;
   const productId = req.params.pid;
   const quantity = req.body.quantity || 1;
+  const userEmail = req.user.email;
 
   try {
     const updatedCart = await CartService.addProductToCart(
       cartId,
       productId,
-      quantity
+      quantity,
+      userEmail
     );
     res.json(updatedCart.products);
   } catch (error) {
     console.error('Error al agregar producto al carrito', error);
-    res.status(500).send('Error interno del servidor');
+    if (error.message === 'You cannot add your own product to the cart.') {
+      res.status(403).send('You cannot add your own product to the cart.');
+    } else {
+      res.status(500).send('Error interno del servidor');
+    }
   }
 });
 

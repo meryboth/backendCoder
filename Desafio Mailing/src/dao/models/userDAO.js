@@ -73,6 +73,20 @@ class UserDAO {
       return user;
     }
   }
+
+  async getUserByResetToken(token) {
+    console.log('Getting user by reset token:', token); // Depuración
+    if (this.model) {
+      const user = await this.model.findOne({ 'resetToken.token': token });
+      console.log('User found in MongoDB:', user); // Depuración
+      return user;
+    } else if (this.fileSystem) {
+      const users = (await this.fileSystem.readFile(this.filePath)) || [];
+      const user = users.find((user) => user.resetToken.token === token);
+      console.log('User found in filesystem:', user); // Depuración
+      return user;
+    }
+  }
 }
 
 export default UserDAO;

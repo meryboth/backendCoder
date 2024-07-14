@@ -10,7 +10,15 @@ const cartDAO = DAOFactory.getDAO('carts', dataSource);
 const productDAO = DAOFactory.getDAO('products', dataSource);
 
 class CartService {
-  async createCart(products) {
+  async createCart(products, userEmail) {
+    // Verificar si alguno de los productos es propio
+    for (const item of products) {
+      const product = await productDAO.getProductById(item.product);
+      if (product.owner === userEmail) {
+        throw new Error('You cannot add your own product to the cart.');
+      }
+    }
+
     console.log('Creating cart with products in CartService:', products); // Debugging
     return await cartDAO.createCart(products);
   }
@@ -19,7 +27,12 @@ class CartService {
     return await cartDAO.getCartById(cartId);
   }
 
-  async addProductToCart(cartId, productId, quantity) {
+  async addProductToCart(cartId, productId, quantity, userEmail) {
+    const product = await productDAO.getProductById(productId);
+    if (product.owner === userEmail) {
+      throw new Error('You cannot add your own product to the cart.');
+    }
+
     return await cartDAO.addProductToCart(cartId, productId, quantity);
   }
 

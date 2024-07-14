@@ -5,6 +5,9 @@ import {
   registerUser,
   getUserProfile,
   getCurrentUser,
+  requestPasswordReset,
+  resetPassword,
+  toggleUserRole,
 } from '../services/user.service.js';
 import { userGenerator } from '../utils/userGenerator.js';
 import CustomError from '../services/errors/customError.js';
@@ -107,6 +110,39 @@ router.get('/current', authenticateJWT, async (req, res, next) => {
         type: 'DATABASE_ERROR',
       })
     );
+  }
+});
+
+// Ruta para solicitar restauración de contraseña
+router.post('/resetpassword', async (req, res, next) => {
+  const { email } = req.body;
+  try {
+    await requestPasswordReset(email);
+    res.redirect('/confirmemailsent'); // Redirige a la nueva vista
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Ruta para resetear la contraseña con el token
+router.post('/newpassword', async (req, res, next) => {
+  const { token, password } = req.body;
+  try {
+    await resetPassword(token, password);
+    res.redirect('/confirmationnewpassword');
+  } catch (error) {
+    next(error);
+  }
+});
+
+/* Cambia el rol de user a premium y de premium a user */
+router.patch('/premium/:pid', authenticateJWT, async (req, res, next) => {
+  const { pid } = req.params;
+  try {
+    const updatedUser = await toggleUserRole(pid);
+    res.json({ status: 'success', user: updatedUser });
+  } catch (error) {
+    next(error);
   }
 });
 
