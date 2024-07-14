@@ -1,6 +1,10 @@
 import CustomRouter from './router.js';
 import ProductService from '../services/products.services.js';
-import { authenticateJWT, isAdmin } from '../middlewares/auth.js';
+import {
+  authenticateJWT,
+  isAdmin,
+  isAdminOrPremium,
+} from '../middlewares/auth.js';
 import { productGenerator } from '../utils/productGenerator.js';
 import { ProductModel } from '../models/product.model.js';
 
@@ -11,9 +15,9 @@ class ProductRouter extends CustomRouter {
 
     this.get('/', this.getAllProducts);
     this.get('/:pid', this.getProductById);
-    this.post('/', authenticateJWT, isAdmin, this.addProduct);
-    this.put('/:pid', authenticateJWT, isAdmin, this.updateProduct);
-    this.delete('/:pid', authenticateJWT, isAdmin, this.deleteProduct);
+    this.post('/', authenticateJWT, isAdminOrPremium, this.addProduct);
+    this.put('/:pid', authenticateJWT, isAdminOrPremium, this.updateProduct);
+    this.delete('/:pid', authenticateJWT, isAdminOrPremium, this.deleteProduct);
   }
 
   async getAllProducts(req, res) {
@@ -67,10 +71,14 @@ class ProductRouter extends CustomRouter {
 
   async addProduct(req, res) {
     const nuevoProducto = req.body;
+    const ownerEmail = req.user.email;
 
     try {
       console.log('Nuevo producto recibido:', nuevoProducto); // Depuración
-      const createdProduct = await ProductService.addProduct(nuevoProducto);
+      const createdProduct = await ProductService.addProduct({
+        ...nuevoProducto,
+        owner: ownerEmail,
+      });
       console.log('Producto creado:', createdProduct); // Depuración
       res.status(201).json({
         message: 'The entered product was successfully added!',
@@ -85,16 +93,30 @@ class ProductRouter extends CustomRouter {
   async updateProduct(req, res) {
     const id = req.params.pid;
     const productoActualizado = req.body;
+    const ownerEmail = req.user.email;
+    const userRole = req.user.role;
 
     try {
-      const updatedProduct = await ProductService.updateProduct(
-        id,
-        productoActualizado
-      );
-      res.json({
-        message: 'The product was successfully edited!',
-        product: updatedProduct,
-      });
+      const producto = await ProductService.getProductById(id);
+
+      if (!producto) {
+        return res.status(404).send('Product not found.');
+      }
+
+      if (producto.owner === ownerEmail || userRole === 'admin') {
+        const updatedProduct = await ProductService.updateProduct(
+          id,
+          productoActualizado
+        );
+        res.json({
+          message: 'The product was successfully edited!',
+          product: updatedProduct,
+        });
+      } else {
+        res
+          .status(403)
+          .send('Access denied: You are not the owner of this product.');
+      }
     } catch (error) {
       console.error('Error updating product:', error);
       res.status(500).send('Internal server error');
@@ -103,10 +125,24 @@ class ProductRouter extends CustomRouter {
 
   async deleteProduct(req, res) {
     const id = req.params.pid;
+    const ownerEmail = req.user.email;
+    const userRole = req.user.role;
 
     try {
-      await ProductService.deleteProduct(id);
-      res.json({ message: 'Product successfully deleted.' });
+      const producto = await ProductService.getProductById(id);
+
+      if (!producto) {
+        return res.status(404).send('Product not found.');
+      }
+
+      if (producto.owner === ownerEmail || userRole === 'admin') {
+        await ProductService.deleteProduct(id);
+        res.json({ message: 'Product successfully deleted.' });
+      } else {
+        res
+          .status(403)
+          .send('Access denied: You are not the owner of this product.');
+      }
     } catch (error) {
       console.error('Error deleting product:', error);
       res.status(500).send('Internal server error');

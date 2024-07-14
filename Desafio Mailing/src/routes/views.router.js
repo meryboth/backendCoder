@@ -14,6 +14,11 @@ class ViewsRouter extends CustomRouter {
     this.get('/register', this.renderRegister);
     this.get('/profile', authenticateJWT, this.renderProfile);
     this.get('/admin', authenticateJWT, isAdmin, this.renderAdmin);
+    /* reset password views */
+    this.get('/resetpassword', this.renderResetPassword);
+    this.get('/newpassword', this.renderNewPassword);
+    this.get('/confirmationnewpassword', this.renderConfirmationNewPassword);
+    this.get('/confirmemailsent', this.renderConfirmEmailSent);
   }
 
   async getProducts(req, res) {
@@ -82,6 +87,22 @@ class ViewsRouter extends CustomRouter {
 
   renderAdmin(req, res) {
     res.render('admin', { user: req.user });
+  }
+
+  renderResetPassword(req, res) {
+    res.render('resetpassword');
+  }
+
+  renderNewPassword(req, res) {
+    res.render('newPassword');
+  }
+
+  renderConfirmationNewPassword(req, res) {
+    res.render('confirmationNewPassword');
+  }
+
+  renderConfirmEmailSent(req, res) {
+    res.render('confirmEmailSent');
   }
 }
 

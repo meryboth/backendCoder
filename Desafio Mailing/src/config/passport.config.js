@@ -5,13 +5,13 @@ import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import bcrypt from 'bcrypt';
 import UserDAO from '../dao/models/userDAO.js';
 import CartService from '../services/cart.services.js';
-import configObject from '../config/config.js';
+import config from '../config/config.js';
 
-const JWT_SECRET = configObject.jwt_secret;
+const JWT_SECRET = config.jwt_secret;
 
 const initializePassport = () => {
-  const userDAO = new UserDAO(configObject.data_source);
-  console.log('UserDAO initialized with dataSource:', configObject.data_source); // Verificación
+  const userDAO = new UserDAO(config.data_source);
+  console.log('UserDAO initialized with dataSource:', config.data_source); // Verificación
 
   // Estrategia de login local
   passport.use(
@@ -109,9 +109,9 @@ const initializePassport = () => {
   passport.use(
     new GithubStrategy(
       {
-        clientID: configObject.githubClientID,
-        clientSecret: configObject.githubClientSecret,
-        callbackURL: configObject.githubCallbackURL,
+        clientID: config.githubClientID,
+        clientSecret: config.githubClientSecret,
+        callbackURL: config.githubCallbackURL,
       },
       async (accessToken, refreshToken, profile, done) => {
         try {

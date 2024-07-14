@@ -1,5 +1,5 @@
 import MongoManager from '../managers/mongoManager.js';
-import FileSystemManager from '../managers/fileSystemManager.js';
+import FileSystemManager from '../managers/filesystemManager.js';
 import { userSchema } from '../../models/user.model.js'; // Importar el esquema
 import { v4 as uuidv4 } from 'uuid';
 
@@ -69,6 +69,20 @@ class UserDAO {
     } else if (this.fileSystem) {
       const users = (await this.fileSystem.readFile(this.filePath)) || [];
       const user = users.find((user) => user.email === email);
+      console.log('User found in filesystem:', user); // Depuración
+      return user;
+    }
+  }
+
+  async getUserByResetToken(token) {
+    console.log('Getting user by reset token:', token); // Depuración
+    if (this.model) {
+      const user = await this.model.findOne({ 'resetToken.token': token });
+      console.log('User found in MongoDB:', user); // Depuración
+      return user;
+    } else if (this.fileSystem) {
+      const users = (await this.fileSystem.readFile(this.filePath)) || [];
+      const user = users.find((user) => user.resetToken.token === token);
       console.log('User found in filesystem:', user); // Depuración
       return user;
     }

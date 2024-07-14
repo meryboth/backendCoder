@@ -1,4 +1,3 @@
-// /config/config.js
 import dotenv from 'dotenv';
 import program from '../utils/process.js';
 
@@ -18,5 +17,7 @@ const configObject = {
   filesystem_path: process.env.FILESYSTEM_PATH,
   data_source: process.env.DATA_SOURCE,
 };
+
+console.log('Config Object:', configObject); // Añadir este log para verificar las variables cargadas
 
 export default configObject;

@@ -23,13 +23,17 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['admin', 'user'],
-      default: 'admin',
+      enum: ['admin', 'user', 'premium'],
+      default: 'user',
     },
     cart: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'carts',
       required: false,
+    },
+    resetToken: {
+      token: String,
+      expire: Date,
     },
   },
   { collection: 'users' }

@@ -1,5 +1,5 @@
 import mongoManager from '../managers/mongoManager.js';
-import FileSystemManager from '../managers/fileSystemManager.js';
+import FileSystemManager from '../managers/filesystemManager.js';
 import { ProductModel, productSchema } from '../../models/product.model.js';
 import { v4 as uuidv4 } from 'uuid';
 

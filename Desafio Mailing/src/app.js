@@ -68,6 +68,8 @@ app.get('/loggertest', (req, res) => {
   res.send('Logs generados');
 });
 
+console.log('Server time:', new Date());
+
 /* listen */
 const PORT = config.port;
 app.listen(PORT, () => {

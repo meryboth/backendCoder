@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
-import configObject from '../config/config.js';
+import config from '../config/config.js';
 
-const JWT_SECRET = configObject.jwt_secret;
+const JWT_SECRET = config.jwt_secret;
 
 export const generateToken = (user) => {
   const payload = {
@@ -9,6 +9,7 @@ export const generateToken = (user) => {
     email: user.email,
     role: user.role,
   };
-  const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
+  console.log('JWT_SECRET used to sign:', JWT_SECRET); // Añadir este log para verificar el secreto usado
+  const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '24h' });
   return token;
 };

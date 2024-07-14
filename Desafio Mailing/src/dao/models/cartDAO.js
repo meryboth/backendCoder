@@ -1,5 +1,5 @@
 import MongoManager from '../managers/mongoManager.js';
-import FileSystemManager from '../managers/fileSystemManager.js';
+import FileSystemManager from '../managers/filesystemManager.js';
 import { CartModel, cartSchema } from '../../models/cart.model.js';
 import { v4 as uuidv4 } from 'uuid';
 
