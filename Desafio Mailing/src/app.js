@@ -18,6 +18,7 @@ import cors from 'cors';
 import compression from 'express-compression';
 import errorHandler from './middlewares/errorHandler.js';
 import addLogger from './utils/logger.js';
+import { cpus } from 'os';
 
 const app = express();
 
@@ -42,6 +43,9 @@ app.use(
   })
 );
 initializePassport();
+
+const numeroDeProcesadores = cpus().length;
+console.log('Los procesadores son:', numeroDeProcesadores);
 
 /* handlebars */
 app.engine('handlebars', exphbs.engine());

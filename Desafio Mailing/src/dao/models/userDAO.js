@@ -1,5 +1,5 @@
 import MongoManager from '../managers/mongoManager.js';
-import FileSystemManager from '../managers/fileSystemManager.js';
+import FileSystemManager from '../managers/filesystemManager.js';
 import { userSchema } from '../../models/user.model.js'; // Importar el esquema
 import { v4 as uuidv4 } from 'uuid';
 

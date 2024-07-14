@@ -7,7 +7,7 @@ import {
   getCurrentUser,
 } from '../services/user.service.js';
 import { userGenerator } from '../utils/userGenerator.js';
-import CustomError from '../services/errors/CustomError.js';
+import CustomError from '../services/errors/customError.js';
 import { ERROR_TYPES } from '../services/errors/enum.js';
 import {
   generateUserError,
