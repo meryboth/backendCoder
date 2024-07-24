@@ -18,8 +18,30 @@ import cors from 'cors';
 import compression from 'express-compression';
 import errorHandler from './middlewares/errorHandler.js';
 import addLogger from './utils/logger.js';
+/* swagger */
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUiExpress from 'swagger-ui-express';
 
 const app = express();
+
+//3) Crear un objeto de configuracion: swaggerOptions
+
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.1',
+    info: {
+      title: 'Documentacion de la App Ecommerce Analogue',
+      description:
+        'App especializada en la venta de productos analógicos de diseño',
+    },
+  },
+  apis: ['./src/docs/*.yaml'],
+};
+
+//4) Conectamos Swagger a nuestro servidor de Express:
+
+const specs = swaggerJSDoc(swaggerOptions);
+app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 
 /* middlewares */
 app.use(express.urlencoded({ extended: true }));
